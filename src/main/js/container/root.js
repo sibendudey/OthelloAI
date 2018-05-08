@@ -1,7 +1,7 @@
 import React from 'react';
 import {Provider} from 'react-redux';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
-import { ConnectedRouter } from 'react-router-redux'
+import {ConnectedRouter} from 'react-router-redux'
 import invariant from 'invariant';
 import {RoutingContext} from 'react-router';
 import LobbyView from '../views/lobby';
@@ -20,19 +20,19 @@ export default class Root extends React.Component {
 
         return (
             <Router>
-              <div>
-                  <Route exact path={"/"} component={IndexView}/>
-                <Route exact path={"/lobby"} component={LobbyView}/>
-                <Route path={"/games/:gameName"} render={(props) =>
-                { return <GameView gameName={props.match.params.gameName} /> }} />
+                <div>
+                    <Route exact path={"/"} component={IndexView}/>
+                    <Route exact path={"/lobby"} component={LobbyView}/>
+                    <Route path={"/games/:gameName"} render={(props) => {
+                        return <GameView gameName={props.match.params.gameName}/>
+                    }}/>
                 </div>
             </Router>
-    );
+        );
     }
 
     render() {
         const {store} = this.props;
-
         return (
             <Provider store={store}>
                 {this._renderRouter()}

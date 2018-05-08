@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
 import {Form , FormGroup, Button, Input} from 'reactstrap';
 
 import {registration} from "../actions";
@@ -12,19 +13,21 @@ class Index extends React.Component {
 
     constructor(props)  {
         super(props);
-        this.form = {};
+        // this.form = {};
     }
 
 
     handleChange(ev) {
-        // console.log($(ev.target).attr('name'));
-        // let name = $(ev.target).val();
-        this.form[$(ev.target).attr('name')] = $(ev.target).val();
+        console.log("Handle change called");
+        this.props.register[$(ev.target).attr('name')] = $(ev.target).val();
+        this.props.dispatch({
+            type: "UPDATE_FORM",
+            register: this.props.register
+        })
     }
 
-
     handleSubmit(event)  {
-        registration(this.form);
+        registration(this.props.register, this.props.history);
         event.preventDefault();
     }
 
@@ -37,10 +40,10 @@ class Index extends React.Component {
               <h4>First up, we need your name:</h4>
               <Form onSubmit={this.handleSubmit.bind(this)}>
               <FormGroup>
-              <Input type="text" name="firstName" placeholder = "First Name" defaultValue="" onChange={this.handleChange.bind(this)}/>
-                  <Input type="text" name="lastName" placeholder = "Last Name" defaultValue="" onChange={this.handleChange.bind(this)}/>
-                  <Input type="email" name="email" placeholder = "Email" defaultValue="" onChange={this.handleChange.bind(this)}/>
-                  <Input type="password" name="password" placeholder = "password" defaultValue="" onChange={this.handleChange.bind(this)}/>
+              <Input type="text" name="firstName" placeholder = "First Name" value={this.props.register.firstName} onChange={this.handleChange.bind(this)}/>
+                  <Input type="text" name="lastName" placeholder = "Last Name" value={this.props.register.lastName} onChange={this.handleChange.bind(this)}/>
+                  <Input type="email" name="email" placeholder = "Email" value={this.props.register.email} onChange={this.handleChange.bind(this)}/>
+                  <Input type="password" name="password" placeholder = "password" value={this.props.register.password} onChange={this.handleChange.bind(this)}/>
               </FormGroup>
               <Button type="submit" className="btn btn-primary btn-lg">
               Enter Lobby
@@ -53,4 +56,4 @@ class Index extends React.Component {
    }
 }
 
-export default connect(({login}) => Object.assign({}, {login : login}))(Index);
+export default withRouter(connect(({register}) => Object.assign({}, {register : register}))(Index));

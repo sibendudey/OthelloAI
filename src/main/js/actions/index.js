@@ -3,7 +3,7 @@ export function registerForm()  {
 
 }
 
-export function registration(form) {
+export function registration(form, history) {
     $.ajax({
        url: "/api/users",
        type: "POST",
@@ -11,7 +11,7 @@ export function registration(form) {
        dataType: "json",
        data: JSON.stringify(form),
        success: function (resp) {
-           console.log(resp);
+           history.push("/lobby");
        },
        error: function(error)   {
            console.log(error);

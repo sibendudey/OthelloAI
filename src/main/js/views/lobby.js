@@ -4,10 +4,13 @@ import {connect} from 'react-redux';
 import {fetchGames} from "../actions/lobby";
 import {ListGame} from "../components/listgame";
 
+import SockJS from 'sockjs-client';
+import {Stomp} from 'stompjs/lib/stomp.js';
 
 class LobbyView extends React.Component {
+
     componentDidMount() {
-        // const {dispatch, lobby} = this.props;
+        const {dispatch} = this.props;
         //
         // if (lobby == null) {
         //     const socket = new Socket("/socket", {params: {playerName: window.playerName}});
@@ -16,6 +19,17 @@ class LobbyView extends React.Component {
         //     lobby.join();
         //     dispatch(fetchGames(lobby))
         // } else dispatch(fetchGames(lobby));
+        console.log("Component Mounted");
+        const socket = new SockJS('/gs-guide-websocket');
+        let stompClient = Stomp.over(socket);
+        dispatch(fetchGames(stompClient, socket));
+        // stompClient.connect({}, function (frame) {
+        //     setConnected(true);
+        //
+        //     // stompClient.subscribe('/game/fetchGames', function (games) {
+        //     //     showGreeting(JSON.parse(greeting.body).content);
+        //     // });
+        // });
 
     }
 
@@ -51,8 +65,9 @@ class LobbyView extends React.Component {
     renderCurrentGames() {
         const {games} = this.props;
 
-        if (games.length == 0) return "No Games Currently being played";
+        console.log(games);
 
+        if (games.length === 0) return "No Games Currently being played";
 
         const gamesList = games.map(game => {
             return (
