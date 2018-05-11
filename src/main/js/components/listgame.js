@@ -14,7 +14,6 @@ export class ListGame extends React.Component {
             <tr className="card-header">
               <td>
                 <h5>{this.state.name}</h5>
-
               </td>
               <td>
                 <Link to={getLink(this.state.name)} className='btn btn-primary' role="button">

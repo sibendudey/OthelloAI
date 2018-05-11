@@ -53,8 +53,13 @@ public class Game{
         }
     }
 
-    public Game() {
+    public Game()   {
 
+    }
+
+    public Game(String gameName) {
+        System.out.println("Creating a new game");
+        this.gameName = gameName;
     }
 
     public void mark(int row, int col) {
@@ -115,12 +120,21 @@ public class Game{
                 else return 0;
             }).sum();
 
-            gen.writeNumberField("player1", value.player1);
-            gen.writeNumberField("player2", value.player2);
+//            gen.writeNumberField("player1", value.player1);
+//            gen.writeNumberField("player2", value.player2);
+//            gen.writeStringField("board", value.board);
+//            gen.writeNumberField("turn", value.turn);
+//            gen.writeNumberField("score1", score1);
+//            gen.writeNumberField("score1", score2);
+
+            // Testing purpose
+            gen.writeStringField("gamename", value.gameName);
+            gen.writeStringField("player1", "sibendu");
+            gen.writeStringField("player2", "tinku");
             gen.writeStringField("board", value.board);
-            gen.writeNumberField("turn", value.turn);
-            gen.writeNumberField("score1", score1);
-            gen.writeNumberField("score1", score2);
+            gen.writeStringField("next_turn", "sibendu");
+            gen.writeNumberField("score1", 2);
+            gen.writeNumberField("score1", 2);
         }
     }
 }

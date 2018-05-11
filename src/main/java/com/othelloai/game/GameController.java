@@ -1,4 +1,4 @@
-package com.othelloai.socket;
+package com.othelloai.game;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class GameController {
@@ -21,7 +18,7 @@ public class GameController {
     @Autowired
     private GameRepository gameRepository;
 
-    @RequestMapping(value = "/games/fetchGames", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/game/fetchGames", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public JsonNode games() {
         ObjectMapper om = new ObjectMapper();
@@ -34,5 +31,15 @@ public class GameController {
         }
 
         return gameLinks;
+    }
+
+    @RequestMapping(value = "/game/newgame", method = RequestMethod.POST, produces="application/json")
+    @ResponseBody
+    public String newGame(@RequestBody String gameName) {
+        Game game = new Game(gameName);
+        gameRepository.save(game);
+        String json = game.toJson();
+        System.out.println(json);
+        return game.toJson();
     }
 }

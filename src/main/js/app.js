@@ -7,7 +7,7 @@ import Root                     from './container/root';
 import '../resources/static/app.scss';
 
 const browserHistory = createBrowserHistory();
-const store  = configureStore(browserHistory);
+const store  = configureStore;
 const history = syncHistoryWithStore(browserHistory, store);
 
 const target = document.getElementById('react');

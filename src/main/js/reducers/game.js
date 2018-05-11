@@ -6,7 +6,7 @@ const initialState = {
 export default function reducer(state = initialState, action = {})   {
     switch(action.type) {
         case "new_game_created":    {
-            return Object.assign({}, state, {gameName: action.gameName});
+            return Object.assign({}, state, {gameData: action.gameData});
         }
         case "fetch_game_data": {
             return Object.assign({},

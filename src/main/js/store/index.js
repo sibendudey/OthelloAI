@@ -13,7 +13,11 @@ const loggerMiddleware = createLogger({
 
 middlewares.push(thunkMiddleware);
 
-export default function configureStore(browserHistory) {
-  const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);
-  return createStoreWithMiddleware(reducers);
-}
+const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);
+
+export default createStoreWithMiddleware(reducers);
+
+// export default function configureStore(browserHistory) {
+//   const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);
+//   return createStoreWithMiddleware(reducers);
+// }

@@ -9,8 +9,7 @@ export default function reducer(state = initialState, action = {}) {
         case "current_games_set":
             return Object.assign({}, state, {
                 games: action.games,
-                lobby: action.lobby,
-                playerName: window.playerName
+                lobbyClient: action.lobbyClient
             });
         default:
             return Object.assign({}, state, {games: []});

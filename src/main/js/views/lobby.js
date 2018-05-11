@@ -1,36 +1,30 @@
 import React from 'react';
 import {connect} from 'react-redux';
-// import {Socket} from "../../../../../deps/phoenix/assets/js/phoenix";
+import { Card, Button, CardTitle, CardText } from 'reactstrap';
 import {fetchGames} from "../actions/lobby";
 import {ListGame} from "../components/listgame";
-
+import { Container, Row, Col, Input } from 'reactstrap';
 import SockJS from 'sockjs-client';
 import {Stomp} from 'stompjs/lib/stomp.js';
+import {newGame} from "../actions/game";
+import {withRouter} from "react-router-dom";
 
 class LobbyView extends React.Component {
 
+    constructor(props)  {
+        super(props);
+        this.gameName = "";
+    }
+
+    onGameNameChange(ev)  {
+        this.gameName = $(ev.target).val();
+    }
+
     componentDidMount() {
         const {dispatch} = this.props;
-        //
-        // if (lobby == null) {
-        //     const socket = new Socket("/socket", {params: {playerName: window.playerName}});
-        //     socket.connect();
-        //     let lobby = socket.channel("lobby:join");
-        //     lobby.join();
-        //     dispatch(fetchGames(lobby))
-        // } else dispatch(fetchGames(lobby));
-        console.log("Component Mounted");
         const socket = new SockJS('/gs-guide-websocket');
         let stompClient = Stomp.over(socket);
         dispatch(fetchGames(stompClient, socket));
-        // stompClient.connect({}, function (frame) {
-        //     setConnected(true);
-        //
-        //     // stompClient.subscribe('/game/fetchGames', function (games) {
-        //     //     showGreeting(JSON.parse(greeting.body).content);
-        //     // });
-        // });
-
     }
 
     render() {
@@ -38,22 +32,43 @@ class LobbyView extends React.Component {
         return (
             <div id="lobby_view">
               <div className="row">
-                <div className="col-xl-6 current_game text-center">
-                  <div id="current_games">
-                    <table>
-                      <tbody>
-                        <tr>
-                          <th>
-                            Current Games
-                          </th>
-                          <th>
-                          </th>
-                        </tr>
-                        {this.renderCurrentGames()}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                  <Col>
+                      <Card body>
+                          <CardTitle>Join or Watch a Game?</CardTitle>
+                          <CardText>You can join or watch games</CardText>
+                          <CardText>{this.renderCurrentGames()}</CardText>
+                      </Card>
+                  </Col>
+                  <Col>
+                      <Card body>
+                          <CardTitle>Start a new game?</CardTitle>
+                          <CardText>
+                              <Input type="text" placeholder="Enter a name for the game" onChange={this.onGameNameChange.bind(this)}/></CardText>
+                          <Button onClick={this.startNewGame.bind(this)}>Start</Button>
+                      </Card>
+                  </Col>
+                  <Col>
+                      <Card body>
+                          <CardTitle>Watch Your Stats</CardTitle>
+                          <Button>Click here</Button>
+                      </Card>
+                  </Col>
+                {/*<div className="col-xl-6 current_game text-center">*/}
+                  {/*<div id="current_games">*/}
+                    {/*<table>*/}
+                      {/*<tbody>*/}
+                        {/*<tr>*/}
+                          {/*<th>*/}
+                            {/*Current Games*/}
+                          {/*</th>*/}
+                          {/*<th>*/}
+                          {/*</th>*/}
+                        {/*</tr>*/}
+                        {/*{this.renderCurrentGames()}*/}
+                      {/*</tbody>*/}
+                    {/*</table>*/}
+                  {/*</div>*/}
+                {/*</div>*/}
               </div>
             </div>
         );
@@ -64,24 +79,22 @@ class LobbyView extends React.Component {
     // https://github.com/bigardone/phoenix-battleship
     renderCurrentGames() {
         const {games} = this.props;
-
-        console.log(games);
-
         if (games.length === 0) return "No Games Currently being played";
-
         const gamesList = games.map(game => {
             return (
                 <ListGame key={game.name + game.inProgress} game={game}/>
             );
         });
-
-        return gamesList
+        return gamesList;
     }
 
+    startNewGame()  {
+        newGame(this.gameName, this.props.history );
+    }
 }
 
 function map(state) {
     return Object.assign({}, state.lobby);
 }
 
-export default connect(map)(LobbyView);
+export default withRouter(connect(map)(LobbyView));

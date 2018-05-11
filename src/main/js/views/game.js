@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 // import {Socket} from "../../../../../deps/phoenix/assets/js/phoenix";
-import {registerForGame, markSquare} from "../actions/game";
+import {registerForGame, markSquare, subscribeToGameChanges, fetchGameData} from "../actions/game";
 import ChatView from "./chat";
 
 class Game extends React.Component {
@@ -11,12 +11,21 @@ class Game extends React.Component {
     }
 
     componentWillMount() {
-        // const {dispatch} = this.props;
+
+        window.playerName = "sibendu";
+        const {dispatch, lobbyClient} = this.props;
+
+        if (gameData == null)
+            fetchGameData(this.props.gameData);
+
+        subscribeToGameChanges(lobbyClient, this.props.gameName);
+
         // const socket = new Socket("/socket", {params: {playerName: window.playerName}});
         // socket.connect();
         // let gameChannel = socket.channel("games:" + this.props.gameName);
         // gameChannel.join();
         // dispatch(registerForGame(gameChannel));
+
     }
 
     render() {
@@ -33,15 +42,15 @@ class Game extends React.Component {
                   <div>{status}</div>
                 </div>
               </div>
-              <div className="chat">
-                <div className="chat_heading">
-                  <h4>
-                    CHAT
-                  </h4>
-                </div>
-                  <ChatView dispatch={this.props.dispatch} gameChannel={this.props.gameChannel}
-                  messages={this.props.messages}/>
-              </div>
+              {/*<div className="chat">*/}
+                {/*<div className="chat_heading">*/}
+                  {/*<h4>*/}
+                    {/*CHAT*/}
+                  {/*</h4>*/}
+                {/*</div>*/}
+                  {/*<ChatView dispatch={this.props.dispatch} gameChannel={this.props.gameChannel}*/}
+                  {/*messages={this.props.messages}/>*/}
+              {/*</div>*/}
             </div>
         );
     }
@@ -336,7 +345,7 @@ function score_board(player1, player2, in_progress, winner) {
 }
 
 const mapStateToProps = (state, props) => {
-    return Object.assign({}, state.game, state.chat, props);
+    return Object.assign({}, state.game, state.chat, props, state.lobby);
 }
 
 export default connect(mapStateToProps)(Game);

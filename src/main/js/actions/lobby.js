@@ -4,29 +4,28 @@ import React from 'react';
 // I would like to attribute this idea of showing the list
 // of games in the lobby page to the underlined link.
 // https://github.com/bigardone/phoenix-battleship
-export function fetchGames(lobby, socket)  {
+export function fetchGames(lobbyClient, socket)  {
     return dispatch => {
-        lobby.connect({}, function (frame) {
-            lobby.subscribe('/games/newGame', function (resp) {
+        lobbyClient.connect({}, function (frame) {
+            lobbyClient.subscribe('/games/newGame', function (resp) {
                 dispatch({
                     type: "current_games_set",
                     games: JSON.parse(resp.body),
-                    lobby: lobby
+                    lobbyClient: lobbyClient
                 });
             });
         });
 
-        $.ajax("/games/fetchGames", {
-            url: "/games/fetchGames",
+        $.ajax("/game/fetchGames", {
+            url: "/game/fetchGames",
             type: "GET",
             contentType: "application/json",
             success: function (resp) {
                 console.log("Response received", resp);
-
                 dispatch({
                     type: "current_games_set",
                     games: resp,
-                    lobby: lobby
+                    lobbyClient: lobbyClient
                 })
             },
             error: function(error)   {
