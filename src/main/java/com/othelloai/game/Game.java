@@ -1,5 +1,7 @@
 package com.othelloai.game;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +35,23 @@ public class Game{
     private long player1;
     private long player2;
     // Represent the board as a string.
+
+    @JsonGetter("score1")
+    public int getScore1()  {
+        return this.board.chars().map(sqr -> {
+            if (sqr == SQUARE.BLACK.getValue()) return 1;
+            else return 0;
+        }).sum();
+    }
+
+    @JsonGetter("score2")
+    public int getScore2()  {
+        return this.board.chars().map(sqr -> {
+            if (sqr == SQUARE.BLACK.getValue()) return 1;
+            else return 0;
+        }).sum();
+    }
+
 
     private String board = INITIAL_BOARD;
     // Guy choosing black color is assigned to player1
