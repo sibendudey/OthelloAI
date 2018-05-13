@@ -15,9 +15,23 @@ import chat                 from './chat';
 var initialState = {}
 export function registerForm(state = initialState, action)  {
     switch (action.type)  {
-        case 'UPDATE_FORM':
-          return Object.assign({}, action.register);
+        case 'UPDATE_REGISTER_FORM':
+          return Object.assign({}, state, action.register);
         default:
-          return initialState;
+          return state;
+    }
+}
+
+let initial_login = {
+    emailid: ""
+}
+
+
+export function loginForm(state = initialState, action) {
+    switch (action.type)    {
+        case 'UPDATE_LOGIN_FORM':
+            return Object.assign({}, state, action.login);
+        default:
+            return state;
     }
 }

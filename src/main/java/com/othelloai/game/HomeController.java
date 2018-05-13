@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class HomeController {
 
-	@RequestMapping(value = {"/", "/lobby", "/games/{gameName}"})
+	@RequestMapping(value = {"/", "/lobby", "/games/{gameName}", "/register"})
 	public String index() {
 		return "index";
 	}

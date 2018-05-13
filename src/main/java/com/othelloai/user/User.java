@@ -17,24 +17,23 @@ package com.othelloai.user;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @Entity
 public class User {
 
 	private @Id @GeneratedValue Long id;
-	private String firstName;
-	private String lastName;
+	private String userName;
+//	private String lastName;
+    @Column(unique = true)
 	private String email;
 
 	private User() {}
 
-	public User(String firstName, String lastName, String email) {
-		this.firstName = firstName;
-		this.lastName = lastName;
+	public User(String userName, String email) {
+		this.userName = userName;
+//		this.lastName = lastName;
 		this.email = email;
 	}
 }

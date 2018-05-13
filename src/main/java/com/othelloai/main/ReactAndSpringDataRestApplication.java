@@ -29,7 +29,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 // tag::code[]
 @SpringBootApplication
 @EntityScan({"com.othelloai.game","com.othelloai.user"})
-@ComponentScan({"com.othelloai.game","com.othelloai.user", "com.othelloai.socket"})
+@ComponentScan({"com.othelloai.game","com.othelloai.user", "com.othelloai.socket", "com.othelloai.exceptions"})
 @EnableJpaRepositories({"com.othelloai.game","com.othelloai.user"})
 @Import(GameSocketConfig.class)
 public class ReactAndSpringDataRestApplication {

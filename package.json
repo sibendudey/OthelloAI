@@ -39,7 +39,8 @@
     "webpack": "3.0.0",
     "history": "4.7.2",
     "sockjs-client": "1.1.4",
-    "stompjs": "2.3.3"
+    "stompjs": "2.3.3",
+    "sweetalert": "2.1.0"
   },
   "scripts": {
     "build": "webpack --watch"
