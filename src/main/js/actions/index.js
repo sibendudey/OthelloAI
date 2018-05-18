@@ -1,8 +1,16 @@
 import {swal} from 'sweetalert';
 
+import store from '../store/index.js';
+
 let success = function (response, history) {
     console.log(response);
-    history.push("/lobby");
+    localStorage.setItem("email", response.email);
+    store.dispatch({
+        type: "SET_PROFILE",
+        profile: {emailId: response.email, userName: response.userName, id: response.id},
+    });
+
+    if (history) history.push("/");
 };
 
 let error = function (err) {

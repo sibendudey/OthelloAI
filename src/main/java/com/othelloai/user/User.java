@@ -15,26 +15,41 @@
  */
 package com.othelloai.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.othelloai.game.Game;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Data
 @Entity
+@ToString(exclude = {"games1", "games2", "winningGames"})
 public class User {
 
 	private @Id @GeneratedValue Long id;
 	private String userName;
-//	private String lastName;
+
     @Column(unique = true)
 	private String email;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "player1")
+	private Set<Game> games1;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "player2")
+	private Set<Game> games2;
+
+    @JsonIgnore
+	@OneToMany(mappedBy = "winner")
+	private Set<Game> winningGames;
 
 	private User() {}
 
 	public User(String userName, String email) {
 		this.userName = userName;
-//		this.lastName = lastName;
 		this.email = email;
 	}
 }
-// end::code[]

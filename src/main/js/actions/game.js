@@ -29,16 +29,19 @@ export function markSquare(i, j, gameChannel)    {
     }
 }
 
-export function newGame(gameName, history)   {
+export function newGame(gameName,userid,history)   {
     $.ajax({
-        url: "/game/newgame",
+        // url: "/game/newgame",
+        url: "/api/games/",
         type: "POST",
-        data: gameName,
+        contentType: "application/json",
+        data: JSON.stringify({"gameName": gameName, "player1": "/users/" + userid}),
         success: function (resp) {
             console.log(resp);
+            delete resp["_links"];
             store.dispatch({
                 type: "new_game_created",
-                gameData: JSON.parse(resp),
+                gameData: resp,
             });
             history.push("/games/" + gameName);
         },
@@ -62,7 +65,6 @@ export function fetchGameData(gameName) {
         url: "/games/" + gameName,
         type: "GET",
         success: function (resp) {
-
             dispatch({
                 type: "new_game_created",
                 gameData: JSON.parse(resp),

@@ -53,22 +53,6 @@ class LobbyView extends React.Component {
                           <Button>Click here</Button>
                       </Card>
                   </Col>
-                {/*<div className="col-xl-6 current_game text-center">*/}
-                  {/*<div id="current_games">*/}
-                    {/*<table>*/}
-                      {/*<tbody>*/}
-                        {/*<tr>*/}
-                          {/*<th>*/}
-                            {/*Current Games*/}
-                          {/*</th>*/}
-                          {/*<th>*/}
-                          {/*</th>*/}
-                        {/*</tr>*/}
-                        {/*{this.renderCurrentGames()}*/}
-                      {/*</tbody>*/}
-                    {/*</table>*/}
-                  {/*</div>*/}
-                {/*</div>*/}
               </div>
             </div>
         );
@@ -89,12 +73,13 @@ class LobbyView extends React.Component {
     }
 
     startNewGame()  {
-        newGame(this.gameName, this.props.history );
+        console.log(this.props);
+        newGame(this.gameName, this.props.profile.id, this.props.history );
     }
 }
 
 function map(state) {
-    return Object.assign({}, state.lobby);
+    return Object.assign({}, state.lobby, {profile: state.profile});
 }
 
 export default withRouter(connect(map)(LobbyView));

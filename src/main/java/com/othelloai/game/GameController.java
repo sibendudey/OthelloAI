@@ -4,12 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.othelloai.game.Game;
-import com.othelloai.game.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -38,8 +33,9 @@ public class GameController {
     public String newGame(@RequestBody String gameName) {
         Game game = new Game(gameName);
         gameRepository.save(game);
-        String json = game.toJson();
-        System.out.println(json);
-        return game.toJson();
+//        String json = game.toJson();
+//        System.out.println(json);
+//        return game.toJson();
+        return null;
     }
 }

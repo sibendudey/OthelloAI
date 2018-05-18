@@ -8,12 +8,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.othelloai.user.User;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.IOException;
 import java.util.Collections;
 
@@ -29,12 +27,20 @@ public class Game{
 
     private @Id @GeneratedValue Long Id;
     private String gameName;
-    private int turn;
     // 0 means 1st player turn and 1 means 2nd player turn
+    private int turn;
 
-    private long player1;
-    private long player2;
-    // Represent the board as a string.
+//    private boolean inProgress;
+//    private boolean isCompleted;
+
+    @ManyToOne
+    private User player1;
+
+    @ManyToOne
+    private User player2;
+
+    @OneToOne
+    private User winner;
 
     @JsonGetter("score1")
     public int getScore1()  {
@@ -42,6 +48,26 @@ public class Game{
             if (sqr == SQUARE.BLACK.getValue()) return 1;
             else return 0;
         }).sum();
+    }
+
+    @JsonGetter("inProgress")
+    public boolean inProgress() {
+        return player2 != null && winner == null;
+    }
+
+    @JsonGetter("isFinished")
+    public boolean finished()   {
+        return winner != null;
+    }
+
+    @JsonGetter("player1id")
+    public long player1Id(){
+        return player1 == null ? -1 : player1.getId();
+    }
+
+    @JsonGetter("player2id")
+    public long player2Id(){
+        return player2 == null ? -1 : player2.getId();
     }
 
     @JsonGetter("score2")
@@ -52,11 +78,11 @@ public class Game{
         }).sum();
     }
 
-
-    private String board = INITIAL_BOARD;
     // Guy choosing black color is assigned to player1
     // Guy playing with white color is assigned
 
+    // Represent the board as a string.
+    private String board = INITIAL_BOARD;
 
     private enum SQUARE {
 
@@ -77,7 +103,6 @@ public class Game{
     }
 
     public Game(String gameName) {
-        System.out.println("Creating a new game");
         this.gameName = gameName;
     }
 
@@ -98,62 +123,62 @@ public class Game{
         }
     }
 
-    public String toJson() {
-        ObjectMapper mapper = new ObjectMapper();
-
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(Game.class, new GameSerializer());
-        mapper.registerModule(module);
-
-        try {
-            return mapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    private static class GameSerializer extends StdSerializer<Game> {
-
-        public GameSerializer() {
-            this(null);
-        }
-
-        public GameSerializer(Class<Game> t) {
-            super(t);
-        }
-
-        @Override
-        public void serialize(Game value, JsonGenerator gen, SerializerProvider provider) throws IOException {
-            gen.writeStartObject();
-
-            int score1 = value.board.chars().map(sqr -> {
-                if (sqr == SQUARE.BLACK.getValue())
-                    return 1;
-                else return 0;
-            }).sum();
-
-            int score2 = value.board.chars().map(sqr -> {
-                if (sqr == SQUARE.BLACK.getValue()) return 1;
-                else return 0;
-            }).sum();
-
-//            gen.writeNumberField("player1", value.player1);
-//            gen.writeNumberField("player2", value.player2);
+//    public String toJson() {
+//        ObjectMapper mapper = new ObjectMapper();
+//
+//        SimpleModule module = new SimpleModule();
+//        module.addSerializer(Game.class, new GameSerializer());
+//        mapper.registerModule(module);
+//
+//        try {
+//            return mapper.writeValueAsString(this);
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return null;
+//    }
+//
+//    private static class GameSerializer extends StdSerializer<Game> {
+//
+//        public GameSerializer() {
+//            this(null);
+//        }
+//
+//        public GameSerializer(Class<Game> t) {
+//            super(t);
+//        }
+//
+//        @Override
+//        public void serialize(Game value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+//            gen.writeStartObject();
+//
+//            int score1 = value.board.chars().map(sqr -> {
+//                if (sqr == SQUARE.BLACK.getValue())
+//                    return 1;
+//                else return 0;
+//            }).sum();
+//
+//            int score2 = value.board.chars().map(sqr -> {
+//                if (sqr == SQUARE.BLACK.getValue()) return 1;
+//                else return 0;
+//            }).sum();
+//
+////            gen.writeNumberField("player1", value.player1);
+////            gen.writeNumberField("player2", value.player2);
+////            gen.writeStringField("board", value.board);
+////            gen.writeNumberField("turn", value.turn);
+////            gen.writeNumberField("score1", score1);
+////            gen.writeNumberField("score1", score2);
+//
+//            // Testing purpose
+//            gen.writeStringField("gamename", value.gameName);
+//            gen.writeStringField("player1", "sibendu");
+//            gen.writeStringField("player2", "tinku");
 //            gen.writeStringField("board", value.board);
-//            gen.writeNumberField("turn", value.turn);
-//            gen.writeNumberField("score1", score1);
-//            gen.writeNumberField("score1", score2);
-
-            // Testing purpose
-            gen.writeStringField("gamename", value.gameName);
-            gen.writeStringField("player1", "sibendu");
-            gen.writeStringField("player2", "tinku");
-            gen.writeStringField("board", value.board);
-            gen.writeStringField("next_turn", "sibendu");
-            gen.writeNumberField("score1", 2);
-            gen.writeNumberField("score1", 2);
-        }
-    }
+//            gen.writeStringField("next_turn", "sibendu");
+//            gen.writeNumberField("score1", 2);
+//            gen.writeNumberField("score1", 2);
+//        }
+//    }
 }

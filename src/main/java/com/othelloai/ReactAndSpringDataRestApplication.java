@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.othelloai.main;
+package com.othelloai;
 
 import com.othelloai.socket.GameSocketConfig;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-/**
- * @author Greg Turnquist
- */
-// tag::code[]
 @SpringBootApplication
-@EntityScan({"com.othelloai.game","com.othelloai.user"})
-@ComponentScan({"com.othelloai.game","com.othelloai.user", "com.othelloai.socket", "com.othelloai.exceptions"})
-@EnableJpaRepositories({"com.othelloai.game","com.othelloai.user"})
-@Import(GameSocketConfig.class)
+//@EntityScan({"com.othelloai.game","com.othelloai.user"})
+//@ComponentScan({"com.othelloai.game","com.othelloai.user", "com.othelloai.socket", "com.othelloai.exceptions"})
+//@EnableJpaRepositories({"com.othelloai.game","com.othelloai.user"})
+//@Import(GameSocketConfig.class)
+@EnableAutoConfiguration
 public class ReactAndSpringDataRestApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ReactAndSpringDataRestApplication.class, args);

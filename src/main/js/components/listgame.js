@@ -9,6 +9,8 @@ export class ListGame extends React.Component {
     }
 
     render() {
+
+        console.log(this.state);
         return (
           <table className="card">
             <tr className="card-header">
