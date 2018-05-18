@@ -35,7 +35,7 @@ export function newGame(gameName,userid,history)   {
         url: "/api/games/",
         type: "POST",
         contentType: "application/json",
-        data: JSON.stringify({"gameName": gameName, "player1": "/users/" + userid}),
+        data: JSON.stringify({"gameName": gameName, "player1": "api/users/" + userid}),
         success: function (resp) {
             console.log(resp);
             delete resp["_links"];

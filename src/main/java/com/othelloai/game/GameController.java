@@ -21,7 +21,7 @@ public class GameController {
         for (Game g : gameRepository.findAll()) {
             JsonNode gameLink = om.createObjectNode();
             ((ObjectNode) gameLink).put("name", g.getGameName());
-            ((ObjectNode) gameLink).put("inProgress", true);
+            ((ObjectNode) gameLink).put("inProgress", g.inProgress());
             ((ArrayNode) gameLinks).add(gameLink);
         }
 

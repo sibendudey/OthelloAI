@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.fasterxml.jackson.databind.util.JSONWrappedObject;
 import com.othelloai.game.Game;
 import com.othelloai.game.GameRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleAfterDelete;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Component;
 @RepositoryEventHandler(Game.class)
 public class GameEventHandler {
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass().getName());
     private final SimpMessagingTemplate websocket;
     private final EntityLinks entityLinks;
     private final static String MESSAGE_PREFIX = "/games";
@@ -67,6 +70,8 @@ public class GameEventHandler {
     private JsonNode getGames()   {
         ObjectMapper om = new ObjectMapper();
         JsonNode gameLinks = om.createArrayNode();
+
+
         for (Game g : gameRepository.findAll()) {
             JsonNode gameLink = om.createObjectNode();
             ((ObjectNode) gameLink).put("name", g.getGameName());

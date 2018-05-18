@@ -12,10 +12,9 @@ class Game extends React.Component {
 
     componentWillMount() {
 
-        window.playerName = "sibendu";
         const {dispatch, lobbyClient} = this.props;
 
-        if (gameData == null)
+        if (this.props.gameData == null)
             fetchGameData(this.props.gameData);
 
         subscribeToGameChanges(lobbyClient, this.props.gameName);
@@ -90,18 +89,18 @@ class Game extends React.Component {
     }
 
     getBoard() {
-        let player1 = this.props.gameData.player1;
-        let player2 = this.props.gameData.player2;
-        let next_turn = this.props.gameData.next_turn;
+        let player1 = this.props.gameData.player1info;
+        let player2 = this.props.gameData.player2info;
+        // let next_turn = this.props.gameData.next_turn;
 
-        if (next_turn.name === window.playerName) {
+        if (player1.id === this.props.profile.id && player1.isTurn) {
             return (
                 <MyTurnBoard dispatch={this.props.dispatch}
                   gameData={this.props.gameData}
                   gameChannel={this.props.gameChannel}/>
             );
         }
-        else if (player1.name === window.playerName || player2.name === window.playerName) {
+        else if (player2.id === this.props.profile.id) {
             return (
                 <OppositeTurnBoard dispatch={this.props.dispatch}
                   gameChannel={this.props.gameChannel}
@@ -152,9 +151,9 @@ class Board extends React.Component{
                     {this.get_info()}
                 </div>
                 {this.renderRows()}
-                {score_board(this.props.gameData.player1,
-                    this.props.gameData.player2,
-                    this.props.gameData.in_progress,
+                {score_board(this.props.gameData.player1info,
+                    this.props.gameData.player2info,
+                    this.props.gameData.inProgress,
                     this.props.gameData.winner)}
             </div>
         );
@@ -258,10 +257,19 @@ class MyTurnBoard extends Board {
 
     renderSquare(i, j) {
         return <Square key={'square' + i + j}
-          value={this.props.gameData.squares[i][j]}
+          value={{color: this.getColor(this.props.gameData.board, i*8 + j), disabled: false}}
           gameChannel={this.props.gameChannel}
           dispatch={this.props.dispatch}
-          clickable={this.props.gameData.in_progress && true}/>;
+          clickable={this.props.gameData.inProgress && true}/>;
+    }
+
+    getColor(board, pos)    {
+        let c = board.charAt(pos);
+        switch(c)   {
+            case '|' : return "";
+            case 'X' : return "black";
+            case 'O' : return "white";
+        }
     }
 
     get_info() {
@@ -270,7 +278,7 @@ class MyTurnBoard extends Board {
             return declare_winner(this.props.gameData.winner);
         }
 
-        if (!this.props.gameData.in_progress)
+        if (!this.props.gameData.inProgress)
             return (
               <div >
                 <h4>
@@ -313,7 +321,7 @@ function score_board(player1, player2, in_progress, winner) {
 
                   Name(⚫):
                   <b>
-                    {player1.name}
+                    {player1.userName}
                   </b>
                 </h5>
                 <h5>
@@ -328,12 +336,10 @@ function score_board(player1, player2, in_progress, winner) {
                 <h5>
                   Name(⚪):
                   <b>
-                    {player2.name}
+                    {player2.userName}
                   </b>
                 </h5>
-
                 <h5>
-
                   Score: <b>{player2.score}</b>
                 </h5>
               </div>
@@ -345,7 +351,7 @@ function score_board(player1, player2, in_progress, winner) {
 }
 
 const mapStateToProps = (state, props) => {
-    return Object.assign({}, state.game, state.chat, props, state.lobby);
+    return Object.assign({}, state.game, props, state.lobby, {profile: state.profile});
 }
 
 export default connect(mapStateToProps)(Game);

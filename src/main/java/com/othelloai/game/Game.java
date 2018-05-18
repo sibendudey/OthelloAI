@@ -2,6 +2,7 @@ package com.othelloai.game;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,15 +61,15 @@ public class Game{
         return winner != null;
     }
 
-    @JsonGetter("player1id")
-    public long player1Id(){
-        return player1 == null ? -1 : player1.getId();
-    }
-
-    @JsonGetter("player2id")
-    public long player2Id(){
-        return player2 == null ? -1 : player2.getId();
-    }
+//    @JsonGetter("player1id")
+//    public long player1Id(){
+//        return player1 == null ? -1 : player1.getId();
+//    }
+//
+//    @JsonGetter("player2id")
+//    public long player2Id(){
+//        return player2 == null ? -1 : player2.getId();
+//    }
 
     @JsonGetter("score2")
     public int getScore2()  {
@@ -76,6 +77,17 @@ public class Game{
             if (sqr == SQUARE.BLACK.getValue()) return 1;
             else return 0;
         }).sum();
+    }
+
+    @JsonGetter("player1info")
+    public PlayerInfo getPlayerInfo1()   {
+        return new PlayerInfo(player1.getId(), player1.getUserName(), turn == 0);
+    }
+
+    @JsonGetter("player2info")
+    public PlayerInfo getPlayerInfo2()   {
+        if (player2 == null) return null;
+        return new PlayerInfo(player2.getId(), player2.getUserName(), turn == 1);
     }
 
     // Guy choosing black color is assigned to player1
@@ -120,6 +132,24 @@ public class Game{
                 boardChar[pos] = SQUARE.WHITE.getValue();
                 this.board = new String(boardChar);
             }
+        }
+    }
+
+
+    private class PlayerInfo {
+        @JsonProperty
+        Long id;
+        @JsonProperty
+        String userName;
+        @JsonProperty
+        boolean isTurn;
+
+        PlayerInfo()    {}
+
+        PlayerInfo(Long id, String userName, boolean isTurn) {
+            this.id = id;
+            this.userName = userName;
+            this.isTurn = isTurn;
         }
     }
 
