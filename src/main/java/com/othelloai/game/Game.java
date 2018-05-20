@@ -94,11 +94,28 @@ public class Game{
     // Guy playing with white color is assigned
 
     // Represent the board as a string.
-    private String board = INITIAL_BOARD;
+    private String board;
+
+    @JsonGetter("board")
+    public String board()   {
+        if (this.board == null)  {
+            StringBuilder board = new StringBuilder(INITIAL_BOARD);
+            board.setCharAt(27, SQUARE.WHITE.getValue());
+            board.setCharAt(28, SQUARE.BLACK.getValue());
+            board.setCharAt(35, SQUARE.BLACK.getValue());
+            board.setCharAt(36, SQUARE.WHITE.getValue());
+            board.setCharAt(19, SQUARE.PLAYABLE.getValue());
+            board.setCharAt(26, SQUARE.PLAYABLE.getValue());
+            board.setCharAt(44, SQUARE.PLAYABLE.getValue());
+            board.setCharAt(37, SQUARE.PLAYABLE.getValue());
+            this.board = board.toString();
+        }
+        return this.board;
+    }
 
     private enum SQUARE {
 
-        WHITE('O'), BLACK('X'), NON('|');
+        WHITE('O'), BLACK('X'), NON('|'), PLAYABLE('?');
         private char square;
 
         SQUARE(char s) {
@@ -108,6 +125,7 @@ public class Game{
         public char getValue() {
             return square;
         }
+
     }
 
     public Game()   {

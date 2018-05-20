@@ -22,6 +22,31 @@ export function registerForGame(gameChannel) {
     }
 }
 
+export function joinGame(gameid, userid, history)  {
+    $.ajax({
+        url: "/api/games/" + gameid,
+        type: "PATCH",
+        contentType: "application/json",
+        data: JSON.stringify({"player2": "api/users/" + userid}),
+        success: function (resp) {
+            console.log(resp);
+            delete resp["_links"];
+            store.dispatch({
+                type: "new_game_created",
+                gameData: resp,
+            });
+            history.push("/games/" + gameid);
+        },
+        error: function(error)   {
+            console.log(error);
+        }
+    });
+}
+
+export function spectateGame(history, gameid)  {
+    history.push("/games/" + gameid);
+}
+
 export function markSquare(i, j, gameChannel)    {
     var obj = {i: i, j: j}
     return dispatch => {
@@ -43,7 +68,7 @@ export function newGame(gameName,userid,history)   {
                 type: "new_game_created",
                 gameData: resp,
             });
-            history.push("/games/" + gameName);
+            history.push("/games/" + resp.id);
         },
         error: function(error)   {
             console.log(error);
@@ -51,28 +76,32 @@ export function newGame(gameName,userid,history)   {
     });
 }
 
-export function subscribeToGameChanges(lobbyClient, gameName)    {
-    lobbyClient.subscribe('/games/' + gameName, function (resp) {
-        dispatch({
-            type: "fetch_game_data",
-            gameData: JSON.parse(resp.body),
-        });
-    });
-}
-
-export function fetchGameData(gameName) {
-    $.ajax({
-        url: "/games/" + gameName,
-        type: "GET",
-        success: function (resp) {
+export function subscribeToGameChanges(lobbyClient, gameid)    {
+    return (dispatch) => {
+        lobbyClient.subscribe('/games/' + gameid, function (resp) {
+            console.log("Game data updated: ", resp.body);
             dispatch({
-                type: "new_game_created",
-                gameData: JSON.parse(resp),
+                type: "fetch_game_data",
+                gameData: JSON.parse(resp.body),
             });
-            history.push("/games/" + gameName);
-        },
-        error: function(error)   {
-            console.log(error);
-        }
-    });
+        });
+    }
+}
+
+export function fetchGameData(gameid) {
+    return (dispatch) => {
+        $.ajax({
+            url: "/api/games/" + gameid,
+            type: "GET",
+            success: function (resp) {
+                dispatch({
+                    type: "fetch_game_data",
+                    gameData: resp,
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
 }

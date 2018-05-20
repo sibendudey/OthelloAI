@@ -1,13 +1,15 @@
 import {swal} from 'sweetalert';
 
 import store from '../store/index.js';
+import SockJS from "sockjs-client";
+import {Stomp} from "stompjs/lib/stomp";
 
-let success = function (response, history) {
+let success = function (response, history, socketClient) {
     console.log(response);
     localStorage.setItem("email", response.email);
     store.dispatch({
         type: "SET_PROFILE",
-        profile: {emailId: response.email, userName: response.userName, id: response.id},
+        profile: {emailId: response.email, userName: response.userName, id: response.id, client: socketClient},
     });
 
     if (history) history.push("/");
@@ -27,7 +29,12 @@ export function registration(form, history) {
        dataType: "json",
        data: JSON.stringify({userName: form.username, email: form.emailid}),
        success: function (resp) {
-           success(resp, history);
+           const socket = new SockJS('/gs-guide-websocket');
+           let stompClient = Stomp.over(socket);
+           stompClient.connect({}, function (frame) {
+               console.log("Connected");
+           });
+           success(resp, history, stompClient);
        },
        error: function(err)   {
            error(err);
@@ -43,7 +50,11 @@ export function login(form, history)    {
         data: form.emailid,
         contentType: "text/plain",
         success: function(resp) {
-            success(resp,history);
+            const socket = new SockJS('/gs-guide-websocket');
+            let stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                success(resp,history, stompClient);
+            });
         },
         error: function(err)   {
             error(err);

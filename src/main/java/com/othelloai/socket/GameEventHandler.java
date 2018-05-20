@@ -52,8 +52,10 @@ public class GameEventHandler {
 
     @HandleAfterSave
     public void updateGame(Game game) {
-        this.websocket.convertAndSend(
-                MESSAGE_PREFIX + "/updateGame", getPath(game));
+//        this.websocket.convertAndSend(
+//                MESSAGE_PREFIX + "/updateGame", getPath(game));
+
+        this.websocket.convertAndSend(MESSAGE_PREFIX + "/" + game.getId() , game);
     }
 
     /**

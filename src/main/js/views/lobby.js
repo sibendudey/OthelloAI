@@ -21,10 +21,10 @@ class LobbyView extends React.Component {
     }
 
     componentDidMount() {
-        const {dispatch} = this.props;
-        const socket = new SockJS('/gs-guide-websocket');
-        let stompClient = Stomp.over(socket);
-        dispatch(fetchGames(stompClient, socket));
+        const {dispatch, profile} = this.props;
+        // const socket = new SockJS('/gs-guide-websocket');
+        // let stompClient = Stomp.over(socket);
+        dispatch(fetchGames(profile.client));
     }
 
     render() {
@@ -66,7 +66,10 @@ class LobbyView extends React.Component {
         if (games.length === 0) return "No Games Currently being played";
         const gamesList = games.map(game => {
             return (
-                <ListGame key={game.name + game.inProgress} game={game}/>
+                <ListGame history={this.props.history}
+                          userid={this.props.profile.id}
+                          key={game.name + game.inProgress}
+                          game={game}/>
             );
         });
         return gamesList;

@@ -1,5 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import {joinGame, spectateGame} from "../actions/game";
+import {Button} from 'reactstrap';
 
 export class ListGame extends React.Component {
 
@@ -9,7 +11,6 @@ export class ListGame extends React.Component {
     }
 
     render() {
-
         console.log(this.state);
         return (
           <table className="card">
@@ -18,13 +19,19 @@ export class ListGame extends React.Component {
                 <h5>{this.state.name}</h5>
               </td>
               <td>
-                <Link to={getLink(this.state.name)} className='btn btn-primary' role="button">
+                <Button className='btn btn-primary' role="button" onClick={this.handleClick.bind(this)}>
                   {!this.state.inProgress ? "Join" : "Spectate"}
-                </Link>
+                </Button>
               </td>
             </tr>
           </table>
         );
+    }
+
+    handleClick()   {
+        this.state.inProgress ?
+            spectateGame(this.props.history, this.state.id) :
+            joinGame(this.state.id, this.props.userid, this.props.history);
     }
 }
 

@@ -1,8 +1,6 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
-// import {Socket} from "../../../../../deps/phoenix/assets/js/phoenix";
-import {registerForGame, markSquare, subscribeToGameChanges, fetchGameData} from "../actions/game";
-import ChatView from "./chat";
+import {markSquare, subscribeToGameChanges, fetchGameData} from "../actions/game";
 
 class Game extends React.Component {
 
@@ -11,20 +9,10 @@ class Game extends React.Component {
     }
 
     componentWillMount() {
-
-        const {dispatch, lobbyClient} = this.props;
-
-        if (this.props.gameData == null)
-            fetchGameData(this.props.gameData);
-
-        subscribeToGameChanges(lobbyClient, this.props.gameName);
-
-        // const socket = new Socket("/socket", {params: {playerName: window.playerName}});
-        // socket.connect();
-        // let gameChannel = socket.channel("games:" + this.props.gameName);
-        // gameChannel.join();
-        // dispatch(registerForGame(gameChannel));
-
+        const {dispatch, profile} = this.props;
+        console.log(profile);
+        if (this.props.gameData == null) dispatch(fetchGameData(this.props.gameName));
+        dispatch(subscribeToGameChanges(profile.client, this.props.gameName));
     }
 
     render() {
@@ -257,7 +245,7 @@ class MyTurnBoard extends Board {
 
     renderSquare(i, j) {
         return <Square key={'square' + i + j}
-          value={{color: this.getColor(this.props.gameData.board, i*8 + j), disabled: false}}
+          value={{color: this.getColor(this.props.gameData.board, i*8 + j), disabled: true}}
           gameChannel={this.props.gameChannel}
           dispatch={this.props.dispatch}
           clickable={this.props.gameData.inProgress && true}/>;
