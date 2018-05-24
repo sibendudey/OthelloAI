@@ -10,7 +10,6 @@ class Game extends React.Component {
 
     componentWillMount() {
         const {dispatch, profile} = this.props;
-        console.log(profile);
         if (this.props.gameData == null) dispatch(fetchGameData(this.props.gameName));
         dispatch(subscribeToGameChanges(profile.client, this.props.gameName));
     }
@@ -81,19 +80,23 @@ class Game extends React.Component {
         let player2 = this.props.gameData.player2info;
         // let next_turn = this.props.gameData.next_turn;
 
-        if (player1.id === this.props.profile.id && player1.isTurn) {
-            return (
-                <MyTurnBoard dispatch={this.props.dispatch}
-                  gameData={this.props.gameData}
-                  gameChannel={this.props.gameChannel}/>
-            );
+
+        if (player1.id === this.props.profile.id)   {
+            return player1.isTurn ? <MyTurnBoard dispatch={this.props.dispatch}
+                                                 gameData={this.props.gameData}
+                                                 gameChannel={this.props.gameChannel}/>
+                : <OppositeTurnBoard dispatch={this.props.dispatch}
+                                     gameChannel={this.props.gameChannel}
+                                     gameData={this.props.gameData}/>
         }
-        else if (player2.id === this.props.profile.id) {
-            return (
-                <OppositeTurnBoard dispatch={this.props.dispatch}
-                  gameChannel={this.props.gameChannel}
-                  gameData={this.props.gameData}/>
-            );
+
+        else if (player2.id === this.props.profile.id)   {
+            return player2.isTurn ? <MyTurnBoard dispatch={this.props.dispatch}
+                                                 gameData={this.props.gameData}
+                                                 gameChannel={this.props.gameChannel}/>
+                : <OppositeTurnBoard dispatch={this.props.dispatch}
+                                     gameChannel={this.props.gameChannel}
+                                     gameData={this.props.gameData}/>
         }
         else {
             return (
@@ -132,6 +135,16 @@ class Board extends React.Component{
         );
     }
 
+    getColor(board, pos)    {
+        let c = board.charAt(pos);
+        switch(c)   {
+            case '|' : return "";
+            case 'X' : return "black";
+            case 'O' : return "white";
+            case '?' : return "nextTurn";
+        }
+    }
+
     render() {
         return (
             <div>
@@ -155,8 +168,8 @@ const black = "⚫";
 class Square extends React.Component {
 
     Click() {
-        if (!this.props.value.disabled && this.props.clickable) {
-            this.props.dispatch(markSquare(this.props.value.i, this.props.value.j, this.props.gameChannel))
+        if (this.props.value.color === "nextTurn" && this.props.clickable) {
+            markSquare(this.props.value.i, this.props.value.j, this.props.value.gameid);
         }
         else {
             window.alert("You are not allowed to click here");
@@ -185,12 +198,7 @@ class Square extends React.Component {
     }
 
     setStyle()   {
-        if (!this.props.value.disabled && this.props.clickable) {
-            return {backgroundColor: '#B20000'}
-        }
-        else {
-            return null;
-        }
+        return this.props.value.color === "nextTurn" ? {backgroundColor: '#B20000'} : null;
     }
 }
 
@@ -198,7 +206,7 @@ class OppositeTurnBoard extends Board {
 
     renderSquare(i, j) {
         return <Square key={'square' + i + j}
-          value={this.props.gameData.squares[i][j]}
+          value={{color: this.getColor(this.props.gameData.board, i*8 + j)}}
           gameChannel={this.props.gameChannel}
           clickable={false}
           dispatch={this.props.dispatch}/>;
@@ -209,8 +217,11 @@ class OppositeTurnBoard extends Board {
             return declare_winner(this.props.gameData.winner);
         }
 
+        let player1 = this.props.gameData.player1info;
+        let player2 = this.props.gameData.player2info;
+
         return "This is "
-            + this.props.gameData.next_turn.name
+            + player1.isTurn === true ? player1.userName : player2.userName
             + "'s" + " turn";
     }
 }
@@ -218,7 +229,7 @@ class OppositeTurnBoard extends Board {
 class SpectatorBoard extends Board {
     renderSquare(i, j) {
         return <Square key={'square' + i + j}
-          value={this.props.gameData.squares[i][j]}
+          value={{color: this.getColor(this.props.gameData.board, i*8 + j)}}
           gameChannel={this.props.gameChannel}
           dispatch={this.props.dispatch}
           clickable={false}/>;
@@ -245,19 +256,10 @@ class MyTurnBoard extends Board {
 
     renderSquare(i, j) {
         return <Square key={'square' + i + j}
-          value={{color: this.getColor(this.props.gameData.board, i*8 + j), disabled: true}}
+          value={{color: this.getColor(this.props.gameData.board, i*8 + j), gameid: this.props.gameData.id}}
           gameChannel={this.props.gameChannel}
           dispatch={this.props.dispatch}
           clickable={this.props.gameData.inProgress && true}/>;
-    }
-
-    getColor(board, pos)    {
-        let c = board.charAt(pos);
-        switch(c)   {
-            case '|' : return "";
-            case 'X' : return "black";
-            case 'O' : return "white";
-        }
     }
 
     get_info() {

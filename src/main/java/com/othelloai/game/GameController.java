@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,6 +14,11 @@ public class GameController {
 
     @Autowired
     private GameRepository gameRepository;
+
+    @Autowired
+    private SimpMessagingTemplate websocket;
+
+    private final static String MESSAGE_PREFIX = "/games";
 
     @RequestMapping(value = "/game/fetchGames", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
@@ -29,14 +36,22 @@ public class GameController {
         return gameLinks;
     }
 
-    @RequestMapping(value = "/game/newgame", method = RequestMethod.POST, produces="application/json")
-    @ResponseBody
-    public String newGame(@RequestBody String gameName) {
-        Game game = new Game(gameName);
-        gameRepository.save(game);
-//        String json = game.toJson();
-//        System.out.println(json);
-//        return game.toJson();
-        return null;
+    @RequestMapping(value = "/game/markSquare", method = RequestMethod.POST, consumes = "application/json")
+    public void markSquare(@RequestBody Square square)    {
+        Game game = gameRepository.findOne(square.id);
+        gameRepository.save(game.mark(square.i, square.j));
+        this.websocket.convertAndSend(MESSAGE_PREFIX + "/" + game.getId() , game);
+    }
+
+    @Data
+    private static class Square    {
+        long id;
+        int i, j;
+        Square()    {}
+        Square(long id, int i, int j)    {
+            this.id = id;
+            this.i = i;
+            this.j = j;
+        }
     }
 }

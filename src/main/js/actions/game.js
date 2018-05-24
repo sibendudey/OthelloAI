@@ -1,6 +1,6 @@
 import configureStore from "../store";
 
-const store  = configureStore;
+const store = configureStore;
 
 export function registerForGame(gameChannel) {
     return (dispatch) => {
@@ -22,7 +22,7 @@ export function registerForGame(gameChannel) {
     }
 }
 
-export function joinGame(gameid, userid, history)  {
+export function joinGame(gameid, userid, history) {
     $.ajax({
         url: "/api/games/" + gameid,
         type: "PATCH",
@@ -37,24 +37,33 @@ export function joinGame(gameid, userid, history)  {
             });
             history.push("/games/" + gameid);
         },
-        error: function(error)   {
+        error: function (error) {
             console.log(error);
         }
     });
 }
 
-export function spectateGame(history, gameid)  {
+export function spectateGame(history, gameid) {
     history.push("/games/" + gameid);
 }
 
-export function markSquare(i, j, gameChannel)    {
-    var obj = {i: i, j: j}
-    return dispatch => {
-        gameChannel.push("games:mark_square", obj).receive("ok", payload => {})
-    }
+export function markSquare(i, j, gameid) {
+    let obj = {i: i, j: j, id: gameid}
+    $.ajax({
+        url: "/game/markSquare",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(obj),
+        success: function (resp) {
+
+        },
+        error: function (error) {
+
+        }
+    });
 }
 
-export function newGame(gameName,userid,history)   {
+export function newGame(gameName, userid, history) {
     $.ajax({
         // url: "/game/newgame",
         url: "/api/games/",
@@ -70,13 +79,13 @@ export function newGame(gameName,userid,history)   {
             });
             history.push("/games/" + resp.id);
         },
-        error: function(error)   {
+        error: function (error) {
             console.log(error);
         }
     });
 }
 
-export function subscribeToGameChanges(lobbyClient, gameid)    {
+export function subscribeToGameChanges(lobbyClient, gameid) {
     return (dispatch) => {
         lobbyClient.subscribe('/games/' + gameid, function (resp) {
             console.log("Game data updated: ", resp.body);

@@ -52,9 +52,6 @@ public class GameEventHandler {
 
     @HandleAfterSave
     public void updateGame(Game game) {
-//        this.websocket.convertAndSend(
-//                MESSAGE_PREFIX + "/updateGame", getPath(game));
-
         this.websocket.convertAndSend(MESSAGE_PREFIX + "/" + game.getId() , game);
     }
 
@@ -73,9 +70,9 @@ public class GameEventHandler {
         ObjectMapper om = new ObjectMapper();
         JsonNode gameLinks = om.createArrayNode();
 
-
         for (Game g : gameRepository.findAll()) {
             JsonNode gameLink = om.createObjectNode();
+            ((ObjectNode) gameLink).put("id", g.getId());
             ((ObjectNode) gameLink).put("name", g.getGameName());
             ((ObjectNode) gameLink).put("inProgress", g.inProgress());
             ((ArrayNode) gameLinks).add(gameLink);
