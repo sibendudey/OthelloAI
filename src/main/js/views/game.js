@@ -221,7 +221,7 @@ class OppositeTurnBoard extends Board {
         let player2 = this.props.gameData.player2info;
 
         return "This is "
-            + player1.isTurn === true ? player1.userName : player2.userName
+            + (player1.isTurn === true ? player1.userName : player2.userName)
             + "'s" + " turn";
     }
 }
@@ -256,7 +256,7 @@ class MyTurnBoard extends Board {
 
     renderSquare(i, j) {
         return <Square key={'square' + i + j}
-          value={{color: this.getColor(this.props.gameData.board, i*8 + j), gameid: this.props.gameData.id}}
+          value={{color: this.getColor(this.props.gameData.board, i*8 + j), gameid: this.props.gameData.id, i: i, j: j}}
           gameChannel={this.props.gameChannel}
           dispatch={this.props.dispatch}
           clickable={this.props.gameData.inProgress && true}/>;

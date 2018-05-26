@@ -16,11 +16,13 @@ export class ListGame extends React.Component {
           <table className="card">
             <tr className="card-header">
               <td>
-                <h5>{this.state.name}</h5>
+                <h5>{this.state.gameName}</h5>
               </td>
               <td>
                 <Button className='btn btn-primary' role="button" onClick={this.handleClick.bind(this)}>
-                  {!this.state.inProgress ? "Join" : "Spectate"}
+                  {!this.state.inProgress ? "Join" :
+                      (this.props.userid === this.state.player1Id ||
+                          this.props.userid === this.state.player2Id) ? "Rejoin" : "Spectate" }
                 </Button>
               </td>
             </tr>

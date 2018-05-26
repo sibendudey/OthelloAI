@@ -30,6 +30,9 @@ public class GameEventHandler {
     private final static String MESSAGE_PREFIX = "/games";
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private GameRepository gameRepository;
 
     @Autowired
@@ -51,7 +54,7 @@ public class GameEventHandler {
     }
 
     @HandleAfterSave
-    public void updateGame(Game game) {
+    public void updateGame(Game game) throws JsonProcessingException {
         this.websocket.convertAndSend(MESSAGE_PREFIX + "/" + game.getId() , game);
     }
 

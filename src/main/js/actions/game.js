@@ -48,7 +48,8 @@ export function spectateGame(history, gameid) {
 }
 
 export function markSquare(i, j, gameid) {
-    let obj = {i: i, j: j, id: gameid}
+    let obj = {i: i, j: j, id: gameid};
+    console.log(obj);
     $.ajax({
         url: "/game/markSquare",
         type: "POST",
