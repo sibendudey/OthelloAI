@@ -3,6 +3,9 @@ package com.othelloai.game;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.othelloai.user.User;
 import lombok.Data;
 import org.slf4j.Logger;
@@ -52,6 +55,12 @@ public class Game {
     }
 
     @JsonIgnore
+    public User getWinner() {
+        return winner;
+    }
+
+
+    @JsonIgnore
     public User getPlayer1() {
         return player1;
     }
@@ -79,6 +88,21 @@ public class Game {
         }).sum();
     }
 
+    @JsonGetter("winnerinfo")
+    public JsonNode winnerId()  {
+        if (winner != null) {
+            ObjectMapper om = new ObjectMapper();
+            JsonNode jsonNode = om.createObjectNode();
+
+
+            ((ObjectNode) jsonNode).put("id", winner.getId());
+            ((ObjectNode)jsonNode).put("userName", winner.getUserName());
+            return jsonNode;
+        }
+
+        return null;
+    }
+
     @JsonGetter("inProgress")
     public boolean inProgress() {
         return player2 != null && winner == null;
@@ -88,14 +112,6 @@ public class Game {
     public boolean finished() {
         return winner != null;
     }
-//    public PlayerInfo getPlayer1()   {
-//        return new PlayerInfo(player1.getId(), player1.getUserName(), turn == 0, getScore1());
-//    }
-//
-//    public PlayerInfo getPlayer2()   {
-//        if (player2 == null) return null;
-//        return new PlayerInfo(player2.getId(), player2.getUserName(), turn == 1, getScore2());
-//    }
 
     // Guy choosing black color is assigned to player1
     // Guy playing with white color is assigned
@@ -206,6 +222,10 @@ public class Game {
         }
     }
 
+    public void dummyMove() {
+        calculateAvailableMove();
+    }
+
     private void calculateAvailableMove() {
         char squares[] = board.toCharArray();
 
@@ -277,13 +297,17 @@ public class Game {
 
         logger.debug("is Possible direction, row: {}, col: {}, i: {}, j: {}", row, col, i, j);
 
-        i = i == 0 ? i : i > 0 ? i + 1 : i - 1;
-        j = j == 0 ? j : j > 0 ? j + 1 : j - 1;
+//        i = i == 0 ? i : i > 0 ? i + 1 : i - 1;
+//        j = j == 0 ? j : j > 0 ? j + 1 : j - 1;
 
         row = row + i;
         col = col + j;
 
         while ((row >= 0 && row < BOARD_SIZE) && (col >= 0 && col < BOARD_SIZE)) {
+
+            if (board.charAt(row * BOARD_SIZE + col ) == SQUARE.BLANK.getValue())
+                return false;
+
             switch (turn) {
                 case PLAYER_1_TURN: {
                     if (board.charAt(row * BOARD_SIZE + col) == SQUARE.BLACK.getValue())

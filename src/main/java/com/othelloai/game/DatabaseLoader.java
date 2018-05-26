@@ -27,6 +27,8 @@ public class DatabaseLoader implements CommandLineRunner {
 
         game.setPlayer1(player1);
         game.setPlayer2(player2);
+        game.setBoard("OOOOOOOXOOOOOOXXOXOXOXOXOOOOOOXXOOOOOOXXOOXOOOXXOOOOOOXXOOOXOO|X");
+        game.dummyMove();
 		repository.save(game);
 	}
 }
