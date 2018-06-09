@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.othelloai.user.User;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import java.util.stream.Stream;
 
 @Data
 @Entity
+@ToString(exclude = {"player1", "player2"})
 public class Game {
 
 
@@ -38,10 +41,14 @@ public class Game {
     private int turn;
 
     @ManyToOne
+    @JoinColumn(name = "player1_fk")
     private User player1;
+
     @ManyToOne
     @JsonIgnore
+    @JoinColumn(name = "player2_fk")
     private User player2;
+
     @OneToOne
     private User winner;
     // Represent the board as a string.
@@ -382,6 +389,15 @@ public class Game {
             this.isTurn = isTurn;
             this.score = score;
         }
+    }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Game && this.Id == ((Game) obj).Id;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.Id.hashCode();
     }
 }

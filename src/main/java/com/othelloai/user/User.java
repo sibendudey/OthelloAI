@@ -18,6 +18,7 @@ package com.othelloai.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.othelloai.game.Game;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -26,6 +27,7 @@ import java.util.Set;
 @Data
 @Entity
 @ToString(exclude = {"games1", "games2", "winningGames"})
+@EqualsAndHashCode(exclude = {"games1", "games2"})
 public class User {
 
 	private @Id @GeneratedValue Long id;

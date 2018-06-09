@@ -7,9 +7,9 @@ import Root                     from './container/root';
 import '../resources/static/app.scss';
 import Index from './views/index';
 import {Provider} from 'react-redux';
-const browserHistory = createBrowserHistory();
+// const browserHistory = createBrowserHistory();
 const store  = configureStore;
-const history = syncHistoryWithStore(browserHistory, store);
+// const history = syncHistoryWithStore(browserHistory, store);
 
 const target = document.getElementById('react');
 

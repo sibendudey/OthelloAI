@@ -18,18 +18,9 @@ public class GameService {
     private GameRepository gameRepository;
 
     public List<GameInfo> gamesForLobby()   {
-//        ObjectMapper om = new ObjectMapper();
         List<GameInfo> gameInfos = new ArrayList<>();
-//        JsonNode gameLinks = om.createArrayNode();
         for (Game g : gameRepository.findAll()) {
-//            JsonNode gameLink = om.createObjectNode();
-//            ((ObjectNode) gameLink).put("id", g.getId());
-//            ((ObjectNode) gameLink).put("name", g.getGameName());
-//            ((ObjectNode) gameLink).put("inProgress", g.inProgress());
-//            ((ArrayNode) gameLinks).add(gameLink);
-
             GameInfo gameInfo = new GameInfo();
-
             gameInfo.id = g.getId();
             gameInfo.gameName = g.getGameName();
             gameInfo.inProgress = g.inProgress();
@@ -42,7 +33,6 @@ public class GameService {
 
             gameInfos.add(gameInfo);
         }
-
         return gameInfos;
     }
 

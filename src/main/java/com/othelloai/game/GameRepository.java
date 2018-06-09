@@ -15,12 +15,15 @@
  */
 package com.othelloai.game;
 
+import com.othelloai.user.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
+import java.util.List;
+
 @RepositoryRestResource
 public interface GameRepository extends CrudRepository<Game, Long> {
-
+    List<Game> findAllByPlayer1OrPlayer2(Long user1, Long user2);
 }
 

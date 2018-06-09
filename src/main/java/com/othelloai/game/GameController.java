@@ -1,21 +1,23 @@
 package com.othelloai.game;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.rest.core.event.AfterSaveEvent;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
+
+import static java.lang.Long.parseLong;
 
 @RestController
 public class GameController {
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass().getName());
     @Autowired
     private GameRepository gameRepository;
 
@@ -33,18 +35,6 @@ public class GameController {
     @RequestMapping(value = "/game/fetchGames", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public List<GameService.GameInfo> games() {
-//        ObjectMapper om = new ObjectMapper();
-//        JsonNode gameLinks = om.createArrayNode();
-//        for (Game g : gameRepository.findAll()) {
-//            JsonNode gameLink = om.createObjectNode();
-//            ((ObjectNode) gameLink).put("id", g.getId());
-//            ((ObjectNode) gameLink).put("name", g.getGameName());
-//            ((ObjectNode) gameLink).put("inProgress", g.inProgress());
-//            ((ArrayNode) gameLinks).add(gameLink);
-//        }
-//
-//        return gameLinks;
-
         return gameService.gamesForLobby();
     }
 
@@ -52,7 +42,6 @@ public class GameController {
     public void markSquare(@RequestBody Square square)    {
         Game game = gameRepository.findOne(square.id);
         gameRepository.save(game.mark(square.i, square.j));
-//        this.websocket.convertAndSend(MESSAGE_PREFIX + "/" + game.getId() , game);
         publisher.publishEvent(new AfterSaveEvent(game));
     }
 
