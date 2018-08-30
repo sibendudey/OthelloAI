@@ -100,8 +100,6 @@ public class Game {
         if (winner != null) {
             ObjectMapper om = new ObjectMapper();
             JsonNode jsonNode = om.createObjectNode();
-
-
             ((ObjectNode) jsonNode).put("id", winner.getId());
             ((ObjectNode)jsonNode).put("userName", winner.getUserName());
             return jsonNode;

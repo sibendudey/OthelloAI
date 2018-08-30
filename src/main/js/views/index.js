@@ -26,9 +26,6 @@ class Index extends React.Component {
     }
 
     render()    {
-        // TODO : Fix to avoid using window object
-        // window.history.pushState({}, "", "/");
-        // this.props.history.push("/");
         if (this.props.profile)
             return <Router>
                     <div>
