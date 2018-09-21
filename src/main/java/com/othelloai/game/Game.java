@@ -8,11 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.othelloai.user.User;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -160,14 +158,12 @@ public class Game {
                 char boardChar[] = board.toCharArray();
                 boardChar[pos] = SQUARE.BLACK.getValue();
                 this.board = new String(boardChar);
-//                turn = PLAYER_2_TURN;
                 break;
             }
             case PLAYER_2_TURN: {
                 char boardChar[] = board.toCharArray();
                 boardChar[pos] = SQUARE.WHITE.getValue();
                 this.board = new String(boardChar);
-//                turn = PLAYER_1_TURN;
             }
         }
 
@@ -205,7 +201,6 @@ public class Game {
         if (this.board.chars().noneMatch(c -> c == SQUARE.PLAYABLE.getValue())) {
             declareWinner();
         }
-//        board.chars().filter()
 
     }
 

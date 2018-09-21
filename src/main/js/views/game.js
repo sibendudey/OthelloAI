@@ -78,8 +78,6 @@ class Game extends React.Component {
     getBoard() {
         let player1 = this.props.gameData.player1info;
         let player2 = this.props.gameData.player2info;
-        // let next_turn = this.props.gameData.next_turn;
-
 
         if (player1.id === this.props.profile.id) {
             return player1.isTurn ? <MyTurnBoard dispatch={this.props.dispatch}

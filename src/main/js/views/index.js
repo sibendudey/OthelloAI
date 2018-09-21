@@ -1,16 +1,13 @@
 import React from 'react';
 
 import {connect} from 'react-redux';
-import {withRouter} from 'react-router-dom';
-import {Form , FormGroup, Button, Input} from 'reactstrap';
+import {login} from "../actions";
 
-import {login, registration} from "../actions";
-
-import {setSession} from "../actions/session";
 import GameView from './game';
 import Lobby from './lobby';
 import LoggedOut from '../components/loggedout';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
+import StatsPage from "./stats";
 
 class Index extends React.Component {
 
@@ -33,6 +30,7 @@ class Index extends React.Component {
                     <Route path={"/games/:gameName"} render={(props) => {
                         return <GameView gameName={props.match.params.gameName}/>
                     }}/>
+                    <Route path={"/stats"} component={StatsPage}/>
                     </div>
                 </Router>;
         else

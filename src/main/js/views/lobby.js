@@ -11,16 +11,23 @@ class LobbyView extends React.Component {
 
     constructor(props)  {
         super(props);
-        this.gameName = "";
+        this.state = {
+            gameName: '',
+        };
+        this.startNewGame = this.startNewGame.bind(this);
+        this.fetchStats = this.fetchStats.bind(this);
+        this.onGameNameChange = this.onGameNameChange.bind(this);
+        this.renderCurrentGames = this.renderCurrentGames.bind(this);
     }
 
     onGameNameChange(ev)  {
-        this.gameName = $(ev.target).val();
+        const gameName = $(ev.target).val();
+        this.setState({gameName});
     }
 
     componentDidMount() {
-        const {dispatch, profile} = this.props;
-        dispatch(fetchGames(profile.client));
+        const {profile} = this.props;
+        this.props.dispatchFetchGames(profile);
     }
 
     render() {
@@ -38,11 +45,11 @@ class LobbyView extends React.Component {
                           <CardTitle>Start a new game?</CardTitle>
                           <CardText>
                               <Input type="text" placeholder="Enter a name for the game" onChange={this.onGameNameChange.bind(this)}/></CardText>
-                          <Button onClick={this.startNewGame.bind(this)}>Start</Button>
+                          <Button onClick={this.startNewGame}>Start</Button>
                       </Card>
                       <Card body>
                           <CardTitle>Watch Your Stats</CardTitle>
-                          <Button onClick={this.fetchStats.bind(this)}>Click here</Button>
+                          <Button onClick={this.fetchStats}>Click here</Button>
                       </Card>
                   </CardDeck>
               </div>
@@ -51,36 +58,35 @@ class LobbyView extends React.Component {
     }
 
     fetchStats()    {
-        console.log(this.props.profile.id);
-        getStats(this.props.lobby, this.props.profile.id);
+        // getStats(this.props.lobby, this.props.profile.id);
+        this.props.dispatchGetStats(this.props.lobbyClient, this.props.profile.id);
     }
 
-    // Attribution.
-    // I would like to attribute this idea of showing the list
-    // of games in the lobby page to the underlined link.
-    // https://github.com/bigardone/phoenix-battleship
     renderCurrentGames() {
         const {games} = this.props;
         if (games.length === 0) return "No Games Currently being played";
-        const gamesList = games.map(game => {
-            return (
-                <ListGame history={this.props.history}
-                          userid={this.props.profile.id}
-                          key={game.name + game.inProgress}
-                          game={game}/>
-            );
-        });
+        const gamesList = games.map((game) => (
+                <ListGame
+                    history={this.props.history}
+                    userid={this.props.profile.id}
+                    key={game.name + game.inProgress}
+                    game={game}/>
+        ));
         return gamesList;
     }
 
     startNewGame()  {
-        console.log(this.props);
         newGame(this.gameName, this.props.profile.id, this.props.history );
     }
 }
 
-function map(state) {
+function mapStateToProps(state) {
     return Object.assign({}, state.lobby, {profile: state.profile});
 }
 
-export default withRouter(connect(map)(LobbyView));
+const mapDispatchToProps = (dispatch) => ({
+    dispatchGetStats: (lobbyClient, userId) => dispatch(getStats(lobbyClient, userId)),
+    dispatchFetchGames: (profile) => dispatch(fetchGames(profile.client)),
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LobbyView));

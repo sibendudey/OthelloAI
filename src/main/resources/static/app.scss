@@ -44,8 +44,11 @@ body{
   padding-top: 10px;
   width: 400px;
   height: 550px;
+}
 
-
+.othello_header {
+  margin-left: 33.34%;
+  margin-top: 10%;
 }
 
 p {
@@ -92,7 +95,6 @@ table th {
   width: 1000px;
   display: grid;
   grid-template-columns: 25% 50% 25%;
-  margin-left: -18%;
 }
 
 .chat {

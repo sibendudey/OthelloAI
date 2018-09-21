@@ -11,6 +11,7 @@ const loggerMiddleware = createLogger({
 });
 
 middlewares.push(thunkMiddleware);
+middlewares.push(loggerMiddleware);
 
 const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);
 

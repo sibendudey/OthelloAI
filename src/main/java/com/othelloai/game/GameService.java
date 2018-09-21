@@ -19,7 +19,7 @@ public class GameService {
 
     public List<GameInfo> gamesForLobby()   {
         List<GameInfo> gameInfos = new ArrayList<>();
-        for (Game g : gameRepository.findAll()) {
+        for (Game g : gameRepository.findByWinnerIsNull()) {
             GameInfo gameInfo = new GameInfo();
             gameInfo.id = g.getId();
             gameInfo.gameName = g.getGameName();

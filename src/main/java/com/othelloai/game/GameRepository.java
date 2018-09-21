@@ -25,5 +25,6 @@ import java.util.List;
 @RepositoryRestResource
 public interface GameRepository extends CrudRepository<Game, Long> {
     List<Game> findAllByPlayer1OrPlayer2(Long user1, Long user2);
+    List<Game> findByWinnerIsNull();
 }
 

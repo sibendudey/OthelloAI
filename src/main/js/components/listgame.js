@@ -1,8 +1,10 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
 import {joinGame, spectateGame} from "../actions/game";
 import {Button} from 'reactstrap';
 
+
+// TODO
+// Make it a stateless component
 export class ListGame extends React.Component {
 
     constructor(props) {
@@ -11,7 +13,6 @@ export class ListGame extends React.Component {
     }
 
     render() {
-        console.log(this.state);
         return (
           <table className="card">
             <tr className="card-header">

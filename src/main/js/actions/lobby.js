@@ -1,8 +1,6 @@
 import React from 'react';
 import {Sweetalert} from 'sweetalert';
-import configureStore from "../store";
-
-const store = configureStore;
+import { push } from 'react-router-redux';
 
 export function fetchGames(lobbyClient) {
     return dispatch => {
@@ -23,6 +21,7 @@ export function fetchGames(lobbyClient) {
                     type: "current_games_set",
                     games: resp,
                 })
+
             },
             error: function (error) {
                 console.log(error);
@@ -31,18 +30,19 @@ export function fetchGames(lobbyClient) {
     }
 }
 
-export function getStats(lobbyClient, userid) {
-    $.ajax("/game/stats/" + userid, {
+export const getStats = (lobbyClient, userid) => (dispatch) => {
+    $.ajax("/user/stats/" + userid, {
         type: "GET",
         contentType: "application/json",
         success: function (resp) {
-            store.dispatch({
-                type: "SET_STATISTICS",
-                stats: resp
+            dispatch({
+                type: "SET_GAME_STATS",
+                gameStats: resp
             });
+            dispatch(push("/stats"));
         },
         error: function (error) {
             console.log("Error while fetching stats");
         }
     });
-}
+};

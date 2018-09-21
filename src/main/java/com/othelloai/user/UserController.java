@@ -15,7 +15,7 @@ public class UserController {
 
     @Autowired UserService userService;
 
-    @RequestMapping(value = "/user/stats/{userId}", method = RequestMethod.GET)
+        @RequestMapping(value = "/user/stats/{userId}", method = RequestMethod.GET)
     public List<UserService.GameStatsData> userGameStats(@PathVariable("userId") String userId)  {
         return userService.userStats(parseLong(userId));
     }

@@ -15,24 +15,16 @@
  */
 package com.othelloai;
 
-import com.othelloai.socket.GameSocketConfig;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.stereotype.Component;
 
-@SpringBootApplication
-//@EntityScan({"com.othelloai.game","com.othelloai.user"})
-//@ComponentScan({"com.othelloai.game","com.othelloai.user", "com.othelloai.socket", "com.othelloai.exceptions"})
-//@EnableJpaRepositories({"com.othelloai.game","com.othelloai.user"})
-//@Import(GameSocketConfig.class)
 @EnableAutoConfiguration
+@ComponentScan(basePackages = "com.othelloai")
 public class ReactAndSpringDataRestApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ReactAndSpringDataRestApplication.class, args);
 	}
 }
-// end::code[]

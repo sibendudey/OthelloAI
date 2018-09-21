@@ -30,5 +30,7 @@ public class DatabaseLoader implements CommandLineRunner {
         game.setBoard("OOOOOOOXOOOOOOXXOXOXOXOXOOOOOOXXOOOOOOXXOOXOOOXXOOOOOOXXOOOXOO|X");
         game.dummyMove();
 		repository.save(game);
+
+		
 	}
 }

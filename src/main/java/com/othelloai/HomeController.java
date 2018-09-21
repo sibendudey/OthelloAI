@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.othelloai.game;
+package com.othelloai;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-/**
- * @author Greg Turnquist
- */
-// tag::code[]
 @Controller
 public class HomeController {
-
 	@RequestMapping(value = {"/", "/lobby", "/games/{gameName}", "/register"})
 	public String index() {
 		return "index";
 	}
-
 }
-// end::code[]
