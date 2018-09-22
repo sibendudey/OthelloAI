@@ -1,24 +1,18 @@
 import {swal} from 'sweetalert';
-
-import store from '../store/index.js';
 import SockJS from "sockjs-client";
 import {Stomp} from "stompjs/lib/stomp";
 
-let success = function (response, history, socketClient) {
-    console.log(response);
+export const success = (response, socketClient) => (dispatch) => {
     localStorage.setItem("email", response.email);
-    store.dispatch({
+    dispatch({
         type: "SET_PROFILE",
         profile: {emailId: response.email, userName: response.userName, id: response.id, client: socketClient},
     });
-
-    if (history) history.push("/");
 };
 
-let error = function (err) {
-    console.log(err);
+export const error = (err) => {
     sweetAlert(err.responseText);
-}
+};
 
 export function registration(form, history) {
     console.log(form);
@@ -42,8 +36,7 @@ export function registration(form, history) {
     });
 }
 
-export function login(form, history)    {
-    console.log(form.emailid);
+const login = (form)  => (dispatch) =>  {
     $.ajax({
         url: "/signup",
         type: "POST",
@@ -53,11 +46,12 @@ export function login(form, history)    {
             const socket = new SockJS('/gs-guide-websocket');
             let stompClient = Stomp.over(socket);
             stompClient.connect({}, function (frame) {
-                success(resp,history, stompClient);
+                dispatch(success(resp,stompClient));
             });
         },
         error: function(err)   {
+            // TODO
             error(err);
         }
-    })
-}
+    });
+};

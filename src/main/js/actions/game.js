@@ -1,4 +1,5 @@
 import configureStore from "../store";
+import { push } from 'connected-react-router';
 
 const store = configureStore;
 
@@ -64,9 +65,9 @@ export function markSquare(i, j, gameid) {
     });
 }
 
-export function newGame(gameName, userid, history) {
+
+export const newGame = (gameName, userid) => (dispatch) => {
     $.ajax({
-        // url: "/game/newgame",
         url: "/api/games/",
         type: "POST",
         contentType: "application/json",
@@ -74,17 +75,17 @@ export function newGame(gameName, userid, history) {
         success: function (resp) {
             console.log(resp);
             delete resp["_links"];
-            store.dispatch({
+            dispatch({
                 type: "new_game_created",
                 gameData: resp,
             });
-            history.push("/games/" + resp.id);
+            dispatch(push("/games/" + resp.id));
         },
         error: function (error) {
             console.log(error);
         }
     });
-}
+};
 
 export function subscribeToGameChanges(lobbyClient, gameid) {
     return (dispatch) => {

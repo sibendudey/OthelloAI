@@ -33,7 +33,7 @@ class LobbyView extends React.Component {
     render() {
         const {lobby, dispatch} = this.props;
         return (
-            <div id="lobby_view">
+            <div className="lobby_view">
               <div className="row">
                   <CardDeck>
                       <Card body>
@@ -76,7 +76,7 @@ class LobbyView extends React.Component {
     }
 
     startNewGame()  {
-        newGame(this.gameName, this.props.profile.id, this.props.history );
+        this.props.dispatchNewGame(this.gameName, this.props.profile.id);
     }
 }
 
@@ -87,6 +87,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = (dispatch) => ({
     dispatchGetStats: (lobbyClient, userId) => dispatch(getStats(lobbyClient, userId)),
     dispatchFetchGames: (profile) => dispatch(fetchGames(profile.client)),
+    dispatchNewGame: (gameName, id) => dispatch(newGame(gameName, id)),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LobbyView));
+export default connect(mapStateToProps, mapDispatchToProps)(LobbyView);
