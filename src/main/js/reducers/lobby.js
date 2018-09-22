@@ -12,6 +12,6 @@ export default function reducer(state = initialState, action = {}) {
                 lobbyClient: action.lobbyClient
             });
         default:
-            return Object.assign({}, state, {games: []});
+            return state;
     }
 }

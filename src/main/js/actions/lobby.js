@@ -1,6 +1,6 @@
 import React from 'react';
 import {Sweetalert} from 'sweetalert';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 
 export function fetchGames(lobbyClient) {
     return dispatch => {
@@ -39,7 +39,7 @@ export const getStats = (lobbyClient, userid) => (dispatch) => {
                 type: "SET_GAME_STATS",
                 gameStats: resp
             });
-            dispatch(push("/stats"));
+            dispatch(push('/stats'));
         },
         error: function (error) {
             console.log("Error while fetching stats");
