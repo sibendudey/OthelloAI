@@ -1,5 +1,6 @@
 
 import $ from 'jquery';
+import {BASE_URL} from "../BaseUrl";
 
 export function registerForGame(gameChannel) {
     return (dispatch) => {
@@ -87,7 +88,7 @@ export const newGame = (gameName, userid) => (dispatch) => {
 
 export function subscribeToGameChanges(lobbyClient, gameid) {
     return (dispatch) => {
-        lobbyClient.subscribe('/games/' + gameid, function (resp) {
+        lobbyClient.subscribe(BASE_URL + '/games/' + gameid, function (resp) {
             console.log("Game data updated: ", resp.body);
             dispatch({
                 type: "fetch_game_data",
@@ -100,7 +101,7 @@ export function subscribeToGameChanges(lobbyClient, gameid) {
 export function fetchGameData(gameid) {
     return (dispatch) => {
         $.ajax({
-            url: "/api/games/" + gameid,
+            url: BASE_URL + "/api/games/" + gameid,
             type: "GET",
             success: function (resp) {
                 dispatch({

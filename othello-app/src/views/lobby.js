@@ -1,12 +1,15 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { Card, CardDeck, Button, CardTitle, CardText } from 'reactstrap';
 import {fetchGames, getStats} from "../actions/lobby";
 import {ListGame} from "../components/listgame";
-import { Container, Row, Col, Input } from 'reactstrap';
 import {newGame} from "../actions/game";
-import {withRouter} from "react-router-dom";
 import $ from 'jquery';
+import Paper from "@material-ui/core/Paper";
+import Table from "@material-ui/core/Table";
+import TableRow from "@material-ui/core/TableRow";
+import TableBody from "@material-ui/core/TableBody";
+import './lobby.scss';
+import Button from "@material-ui/core/es/Button/Button";
 
 class LobbyView extends React.Component {
 
@@ -33,29 +36,20 @@ class LobbyView extends React.Component {
 
     render() {
         const {lobby, dispatch} = this.props;
-        return (
-            <div className="lobby_view">
-              <div className="row">
-                  <CardDeck>
-                      <Card body>
-                          <CardTitle>Join or Watch a Game?</CardTitle>
-                          <CardText>You can join or watch games</CardText>
-                          <CardText>{this.renderCurrentGames()}</CardText>
-                      </Card>
-                      <Card body>
-                          <CardTitle>Start a new game?</CardTitle>
-                          <CardText>
-                              <Input type="text" placeholder="Enter a name for the game" onChange={this.onGameNameChange.bind(this)}/></CardText>
-                          <Button onClick={this.startNewGame}>Start</Button>
-                      </Card>
-                      <Card body>
-                          <CardTitle>Watch Your Stats</CardTitle>
-                          <Button onClick={this.fetchStats}>Click here</Button>
-                      </Card>
-                  </CardDeck>
-              </div>
+        return (<div className={"view-all-games-container"}>
+            <Paper>
+                <Table>
+                    <TableBody>
+                        {
+                            this.renderCurrentGames()
+                        }
+                    </TableBody>
+                </Table>
+            </Paper>
+            <div className='create-new-game'>
+                <Button variant="contained">Create new game</Button>
             </div>
-        );
+        </div>);
     }
 
     fetchStats()    {
@@ -66,13 +60,13 @@ class LobbyView extends React.Component {
     renderCurrentGames() {
         const {games} = this.props;
         if (games.length === 0) return "No Games Currently being played";
-        const gamesList = games.map((game) => (
-                <ListGame
-                    history={this.props.history}
-                    userid={this.props.profile.id}
-                    key={game.name + game.inProgress}
-                    game={game}/>
-        ));
+        const gamesList = games.map((game) => (<TableRow>
+            <ListGame
+                history={this.props.history}
+                userid={this.props.profile.id}
+                key={game.name + game.inProgress}
+                game={game} />
+          </TableRow>));
         return gamesList;
     }
 
@@ -87,7 +81,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch) => ({
     dispatchGetStats: (lobbyClient, userId) => dispatch(getStats(lobbyClient, userId)),
-    dispatchFetchGames: (profile) => dispatch(fetchGames(profile.client)),
+    dispatchFetchGames: (profile) => dispatch(fetchGames((profile || {}).client)),
     dispatchNewGame: (gameName, id) => dispatch(newGame(gameName, id)),
 });
 

@@ -1,17 +1,18 @@
 import React from 'react';
 import Sweetalert from 'sweetalert';
 import $ from 'jquery';
+import {BASE_URL} from "../BaseUrl";
 
 export function fetchGames(lobbyClient) {
-    return dispatch => {
-        lobbyClient.subscribe('/games/newGame', function (resp) {
+    return (dispatch, getState) => {
+        lobbyClient.subscribe(BASE_URL + '/games/newGame', function (resp) {
             dispatch({
                 type: "current_games_set",
                 games: JSON.parse(resp.body),
             });
         });
 
-        $.ajax("/game/fetchGames", {
+        $.ajax(BASE_URL + "/game/fetchGames", {
             url: "/game/fetchGames",
             type: "GET",
             contentType: "application/json",

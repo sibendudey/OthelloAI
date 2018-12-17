@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {markSquare, subscribeToGameChanges, fetchGameData} from "../actions/game";
+import {withRouter} from "react-router";
 
 class Game extends React.Component {
 
@@ -10,8 +11,9 @@ class Game extends React.Component {
 
     componentWillMount() {
         const {dispatch, profile} = this.props;
-        if (this.props.gameData == null) dispatch(fetchGameData(this.props.gameName));
-        dispatch(subscribeToGameChanges(profile.client, this.props.gameName));
+        const { gameName } = this.props.match.params;
+        if (this.props.gameData == null) dispatch(fetchGameData(gameName));
+        dispatch(subscribeToGameChanges(profile.client, gameName));
     }
 
     render() {
@@ -24,9 +26,9 @@ class Game extends React.Component {
                     <div className="shadow-board">
                         {this.getBoard()}
                     </div>
-                    <div className='game-info'>
-                        <div>{status}</div>
-                    </div>
+                    {/*<div className='game-info'>*/}
+                        {/*<div>{status}</div>*/}
+                    {/*</div>*/}
                 </div>
                 {/*<div className="chat">*/}
                 {/*<div className="chat_heading">*/}
@@ -254,8 +256,10 @@ class SpectatorBoard extends Board {
             return declare_winner(this.props.gameData.winnerinfo, this.props.profile.id);
         }
 
+        const { player1info, player2info } = this.props.gameData;
+        const nextTurn = player1info.isTurn ? player1info : player2info;
         return "This is "
-            + this.props.gameData.next_turn.name
+            + nextTurn.userName
             + "'s" + " turn";
     }
 
@@ -387,6 +391,6 @@ function score_board(player1, player2, in_progress, isFinished) {
 
 const mapStateToProps = (state, props) => {
     return Object.assign({}, state.game, props, state.lobby, {profile: state.profile});
-}
+};
 
-export default connect(mapStateToProps)(Game);
+export default withRouter(connect(mapStateToProps)(Game));

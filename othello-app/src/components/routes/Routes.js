@@ -5,17 +5,22 @@ import {Redirect, Route, withRouter} from "react-router";
 import {connect} from "react-redux";
 import ProfilePage from "../profile_page/ProfilePage";
 import LobbyView from '../../views/lobby';
+import Game from '../../views/game';
 
 const Routes = (props) => {
   const {profile} = props;
   return (<div>
     {
-      !profile && <Redirect to='/login' />
+      !profile && <Redirect to='/login'/>
     }
     <Route exact path='/login' component={LoginForm}/>
     <Route path='/register' component={RegisterForm}/>
-    <Route path='/profile' component={ProfilePage}/>
-    <Route path='/lobby' component={LobbyView}/>
+    {profile &&
+    <React.Fragment>
+      <Route path='/profile' component={ProfilePage}/>
+      <Route path='/lobby' component={LobbyView}/>
+      <Route path='/games/:gameName' component={Game} />
+    </React.Fragment>}
   </div>);
 };
 

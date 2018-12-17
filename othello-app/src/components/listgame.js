@@ -1,6 +1,7 @@
 import React from 'react';
 import {joinGame, spectateGame} from "../actions/game";
-import {Button} from 'reactstrap';
+import TableCell from "@material-ui/core/es/TableCell/TableCell";
+import Button from "@material-ui/core/Button";
 
 
 // TODO
@@ -14,20 +15,18 @@ export class ListGame extends React.Component {
 
     render() {
         return (
-          <table className="card">
-            <tr className="card-header">
-              <td>
-                <h5>{this.state.gameName}</h5>
-              </td>
-              <td>
-                <Button className='btn btn-primary' role="button" onClick={this.handleClick.bind(this)}>
-                  {!this.state.inProgress ? "Join" :
-                      (this.props.userid === this.state.player1Id ||
-                          this.props.userid === this.state.player2Id) ? "Rejoin" : "Spectate" }
-                </Button>
-              </td>
-            </tr>
-          </table>
+          <React.Fragment>
+            <TableCell>
+            <h3>{this.state.gameName}</h3>
+            </TableCell>
+            <TableCell>
+            <Button variant='contained' onClick={this.handleClick.bind(this)}>
+              {!this.state.inProgress ? "Join" :
+                  (this.props.userid === this.state.player1Id ||
+                      this.props.userid === this.state.player2Id) ? "Rejoin" : "Spectate" }
+            </Button>
+            </TableCell>
+          </React.Fragment>
         );
     }
 
