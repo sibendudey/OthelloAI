@@ -7,6 +7,7 @@ import {loginForm as login, profile, registerForm as register} from './index';
 import {registrationFormReducer} from "../components/register_form/RegistrationFormReducers";
 import {loginForm} from "../components/login_form/LoginReducers";
 import {navigationBarReducer} from "../components/navigation_bar/NavigationBarReducer";
+import {profilePageReducer} from "../components/profile_page/ProfilePageReducers";
 
 export default combineReducers({
     lobby,
@@ -14,7 +15,7 @@ export default combineReducers({
     chat,
     register: registrationFormReducer,
     login: loginForm,
-    profile,
+    profile: profilePageReducer,
     gameStats,
     navigationBar: navigationBarReducer,
 });

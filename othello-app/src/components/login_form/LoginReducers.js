@@ -1,10 +1,14 @@
 import {UPDATE_LOGIN_FORM} from "./LoginActions";
 
-var initialState = {}
+var initialState = {
+  emailid: '',
+  username: '',
+};
+
 export function registerForm(state = initialState, action)  {
   switch (action.type)  {
     case 'UPDATE_REGISTER_FORM':
-      return Object.assign({}, state, action.register);
+      return Object.assign({}, state, ...action.register);
     default:
       return state;
   }

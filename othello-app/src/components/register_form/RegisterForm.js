@@ -1,20 +1,12 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {
-  Button,
-  FormGroup,
-  Form,
-  Label,
-  Input,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText
-} from 'reactstrap';
-import {Link, Route, Redirect} from 'react-router-dom';
 import swal from 'sweetalert';
 import {withRouter} from "react-router-dom";
-// import {registration} from "../actions";
 import $ from 'jquery';
+import {TextField, Button} from "@material-ui/core";
+import './registerForm.scss';
+import {registration, updateRegisterForm} from "./RegisterFormActions";
+import {Redirect} from "react-router";
 
 function RegisterForm(props) {
   
@@ -22,7 +14,7 @@ function RegisterForm(props) {
     let tgt = $(ev.target);
     let data = {};
     data[tgt.attr('name')] = tgt.val();
-    props.dispatch({type: 'UPDATE_REGISTER_FORM', register: data});
+    props.dispatchUpdateRegisterForm(data);
   }
   
   function create_token(ev) {
@@ -33,10 +25,10 @@ function RegisterForm(props) {
     var email = props.register.emailid;
     // var pass = props.register.password;
     var name = props.register.username;
-    if(emptyRegex.test(email) || email == ""){
+    if(emptyRegex.test(email) || email === ""){
       swal("Email field can't be empty");
     }
-    else if(emptyRegex.test(name) || name == ""){
+    else if(emptyRegex.test(name) || name === ""){
       swal("Name field can't be empty");
     }
     else if(!emailRegex.test(email))
@@ -45,48 +37,31 @@ function RegisterForm(props) {
     }
     else{
       // Move the registation out of here
-      // registration(props.register, props.history);
+      props.dispatchRegistration();
     }
   }
   
-  return <div className="d-flex  h-100 py-5 loginBackground">
-    <div className="d-flex flex-column mx-auto">
-      <h3 className="text-center font-weight-bold h3 pt-3">Register to Bus Tracker App</h3>
-      <div className="row justify-content-center">
-        <Form className="mt-4">
-          <FormGroup>
-            <InputGroup>
-              <InputGroupAddon addonType="prepend">
-                <InputGroupText className="material-icons">
-                  Username
-                </InputGroupText>
-              </InputGroupAddon>
-              <Input type="text" name="username" placeholder="username" value={props.register.username} onChange={update}/>
-            </InputGroup>
-          </FormGroup>
-          <FormGroup>
-            <InputGroup>
-              <InputGroupAddon addonType="prepend">
-                <InputGroupText className="material-icons">
-                  email
-                </InputGroupText>
-              </InputGroupAddon>
-              <Input type="email" name="emailid" placeholder="email" value={props.register.emailid} onChange={update}/>
-            </InputGroup>
-          </FormGroup>
-          
-          <FormGroup className="text-center">
-            <Button className="mr-2" color="primary" onClick={create_token}>Register</Button>
-            <Link to="/" className="btn btn-secondary  text-center" color="secondary">Back to Login</Link>
-          </FormGroup>
-        </Form>
-      </div>
+  
+  return (<div className={"register-form-container"}>
+    {
+      props.profile && <Redirect to='/profile' />
+    }
+    <TextField label='Username' name='username' value={props.register.username} onChange={update}/>
+    <TextField label='Email' name='emailid' value={props.register.emailid} onChange={update}/>
+    <div className="register-button">
+      <Button variant='contained' className="mr-2 text-center" color="primary" onClick={create_token}>Register</Button>
     </div>
-  </div>;
+  </div>);
 }
+
+export const mapDispatchToProps = (dispatch) => ({
+  dispatchUpdateRegisterForm: (data) => dispatch(updateRegisterForm(data)),
+  dispatchRegistration: () => dispatch(registration()),
+});
 
 export const mapStateToProps = (state) => ({
   register: state.register,
+  profile: state.profile,
 });
 
-export default withRouter(connect(mapStateToProps)(RegisterForm));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(RegisterForm));

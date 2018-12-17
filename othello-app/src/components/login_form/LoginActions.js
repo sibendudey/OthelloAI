@@ -3,6 +3,7 @@ import {Stomp} from "stompjs/lib/stomp";
 import swal from 'sweetalert';
 import $ from 'jquery';
 import {BASE_URL, SOCKET_URL} from "../../BaseUrl";
+import {profileSuccess} from "../profile_page/ProfilePageActions";
 
 export const login = ()  => (dispatch, getState) =>  {
   const form = getState().login;
@@ -12,10 +13,10 @@ export const login = ()  => (dispatch, getState) =>  {
     data: form.emailid,
     contentType: "text/plain",
     success: function(resp) {
-      const socket = new SockJS(BASE_URL + '/gs-guide-websocket');
+      const socket = new SockJS( BASE_URL + '/gs-guide-websocket');
       let stompClient = Stomp.over(socket);
       stompClient.connect({}, function (frame) {
-        dispatch(success(resp,stompClient));
+        dispatch(profileSuccess(resp,stompClient));
       });
     },
     error: function(err)   {
@@ -32,13 +33,6 @@ export const updateLoginForm = ({target}) => (dispatch) => {
   });
 };
 
-export const success = (response, socketClient) => (dispatch) => {
-  localStorage.setItem("email", response.email);
-  dispatch({
-    type: "SET_PROFILE",
-    profile: {emailId: response.email, userName: response.userName, id: response.id, client: socketClient},
-  });
-};
 
 export const error = (err) => {
   swal(err.responseText);
