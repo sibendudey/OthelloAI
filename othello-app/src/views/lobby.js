@@ -35,7 +35,7 @@ class LobbyView extends React.Component {
     }
 
     render() {
-        const {lobby, dispatch} = this.props;
+        const {lobby, dispatch, history} = this.props;
         return (<div className={"view-all-games-container"}>
             <Paper>
                 <Table>
@@ -47,7 +47,7 @@ class LobbyView extends React.Component {
                 </Table>
             </Paper>
             <div className='create-new-game'>
-                <Button variant="contained">Create new game</Button>
+                <Button variant="contained" onClick={() => history.push('/create_game')}>Create new game</Button>
             </div>
         </div>);
     }
