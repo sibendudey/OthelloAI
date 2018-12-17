@@ -1,7 +1,5 @@
-import configureStore from "../store";
-import { push } from 'connected-react-router';
 
-const store = configureStore;
+import $ from 'jquery';
 
 export function registerForGame(gameChannel) {
     return (dispatch) => {
@@ -32,10 +30,10 @@ export function joinGame(gameid, userid, history) {
         success: function (resp) {
             console.log(resp);
             delete resp["_links"];
-            store.dispatch({
-                type: "new_game_created",
-                gameData: resp,
-            });
+            // store.dispatch({
+            //     type: "new_game_created",
+            //     gameData: resp,
+            // });
             history.push("/games/" + gameid);
         },
         error: function (error) {
@@ -79,7 +77,7 @@ export const newGame = (gameName, userid) => (dispatch) => {
                 type: "new_game_created",
                 gameData: resp,
             });
-            dispatch(push("/games/" + resp.id));
+            // dispatch(push("/games/" + resp.id));
         },
         error: function (error) {
             console.log(error);

@@ -13,13 +13,17 @@ const INITIAL_STATE = {
   ],
   loggedInTabs: [
     {
+      tabName: 'Profile',
+      tabUrl: '/profile',
+    },
+    {
       tabName: 'Lobby',
       tabUrl: '/lobby',
     },
     {
-      tabName: 'Games',
-      tabUrl: '/games',
-    },
+      tabName: 'Play a game',
+      tabUrl: 'create_game',
+    }
   ],
   
   selectedValue: 'Home',

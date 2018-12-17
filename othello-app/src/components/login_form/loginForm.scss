@@ -1,0 +1,11 @@
+.login-form-container {
+  width: 30%;
+  margin-top: 50px;
+  margin-left: 50px;
+  display: flex;
+  flex-flow: column;
+  .login-button {
+    margin-left: auto;
+    margin-top: 10px;
+  }
+}

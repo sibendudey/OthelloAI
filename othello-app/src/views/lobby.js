@@ -6,6 +6,7 @@ import {ListGame} from "../components/listgame";
 import { Container, Row, Col, Input } from 'reactstrap';
 import {newGame} from "../actions/game";
 import {withRouter} from "react-router-dom";
+import $ from 'jquery';
 
 class LobbyView extends React.Component {
 

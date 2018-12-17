@@ -12,4 +12,4 @@ export const registrationFormReducer = (state = INITIAL_STATE, action) => {
     default:
       return state;
   }
-}
+};

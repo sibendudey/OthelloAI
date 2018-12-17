@@ -1,5 +1,7 @@
-package com.othelloai.game;
+package com.othelloai.dataloader;
 
+import com.othelloai.game.Game;
+import com.othelloai.game.GameRepository;
 import com.othelloai.user.User;
 import com.othelloai.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,5 @@ public class DatabaseLoader implements CommandLineRunner {
         game.setBoard("OOOOOOOXOOOOOOXXOXOXOXOXOOOOOOXXOOOOOOXXOOXOOOXXOOOOOOXXOOOXOO|X");
         game.dummyMove();
 		repository.save(game);
-
-		
 	}
 }

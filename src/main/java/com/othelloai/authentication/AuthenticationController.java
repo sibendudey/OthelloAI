@@ -21,7 +21,6 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST, consumes = "text/plain")
     public User signUp(@RequestBody String emailId)  {
-        logger.debug("Email id is " + emailId);
         User user;
         if ( (user = userRepository.findOneByEmail(emailId)) != null)    {
             return user;
