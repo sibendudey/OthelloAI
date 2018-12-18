@@ -4,7 +4,7 @@ const INITIAL_STATE = {
   loggedOffTabs: [
   {
     tabName: 'Login',
-    tabUrl: '/',
+    tabUrl: '/login',
   },
   {
     tabName: 'Register',

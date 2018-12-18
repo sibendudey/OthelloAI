@@ -53,7 +53,6 @@ class LobbyView extends React.Component {
     }
 
     fetchStats()    {
-        // getStats(this.props.lobby, this.props.profile.id);
         this.props.dispatchGetStats(this.props.lobbyClient, this.props.profile.id);
     }
 

@@ -41,7 +41,7 @@ body{
 .area-size {
   margin-left: 14%;
   padding-top: 10px;
-  width: 400px;
+  width: 100%;
   height: 550px;
 }
 
@@ -91,9 +91,8 @@ table th {
 
 
 .game {
-  width: 1000px;
-  display: grid;
-  grid-template-columns: 25% 50% 25%;
+  width: 70%;
+  margin: 50px auto;
 }
 
 .chat {
@@ -163,6 +162,7 @@ table th {
 .visible {
   text-align: center;
   padding-bottom: 10px;
+  padding-top: 10px;
   margin-bottom: 10px;
   -webkit-box-shadow: 0 0 10px #000000;
   box-shadow: 0 0 10px #000000;
