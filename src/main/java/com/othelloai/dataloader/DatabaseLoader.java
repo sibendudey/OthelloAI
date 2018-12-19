@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+// Uncomment the annotation if you want to load the DB in your env
 @Component
 public class DatabaseLoader implements CommandLineRunner {
 
