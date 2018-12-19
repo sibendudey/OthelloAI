@@ -23,31 +23,21 @@ class Game extends React.Component {
     
     return (
       <div className="game">
-        <Grid container  spacing={24}>
-          <Grid item xs={6}>
-            <Paper>
-              {this.getInfo()}
-            </Paper>
-          </Grid>
-          <Grid item xs={6}>
+        <Grid container direction='column' spacing={24}>
+          <Grid item xs={12}>
             <Paper>
               <div className="shadow-board">
                 {this.getBoard()}
               </div>
             </Paper>
           </Grid>
+          <Grid item xs={12}>
+            <Paper>
+              {this.getInfo()}
+            </Paper>
+          </Grid>
         </Grid>
       </div>
-      // <div className="game" key='game'>
-      //     <div className="introduction">{this.getInfo()}</div>
-      //     <div className="game-board area-size" key='game-board'>
-      //         <div className="shadow-board">
-      //             {this.getBoard()}
-      //         </div>
-      //         {/*<div className='game-info'>*/}
-      //             {/*<div>{status}</div>*/}
-      //         {/*</div>*/}
-      //     </div>
       //     {/*<div className="chat">*/}
       //     {/*<div className="chat_heading">*/}
       //     {/*<h4>*/}
