@@ -1,0 +1,9 @@
+.create-game-container  {
+  margin: 50px auto;
+  display: flex;
+  flex-flow: column;
+  width: 50%;
+  .create-game-button {
+    margin: 10px 0px 0px auto;
+  }
+}

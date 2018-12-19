@@ -49,7 +49,7 @@ function RegisterForm(props) {
     <TextField label='Username' name='username' value={props.register.username} onChange={update}/>
     <TextField label='Email' name='emailid' value={props.register.emailid} onChange={update}/>
     <div className="register-button">
-      <Button variant='contained' className="mr-2 text-center" color="primary" onClick={create_token}>Register</Button>
+      <Button variant='contained' color="primary" onClick={create_token}>Register</Button>
     </div>
   </div>);
 }

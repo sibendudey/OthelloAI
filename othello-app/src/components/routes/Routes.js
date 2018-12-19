@@ -6,6 +6,7 @@ import {connect} from "react-redux";
 import ProfilePage from "../profile_page/ProfilePage";
 import LobbyView from '../../views/lobby';
 import Game from '../../views/game';
+import CreateGame from "../create_game/CreateGame";
 
 const Routes = (props) => {
   const {profile} = props;
@@ -19,6 +20,7 @@ const Routes = (props) => {
     <React.Fragment>
       <Route path='/profile' component={ProfilePage}/>
       <Route path='/lobby' component={LobbyView}/>
+      <Route path='/create_game' component={CreateGame} />
       <Route path='/games/:gameName' component={Game} />
     </React.Fragment>}
   </div>);
