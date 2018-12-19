@@ -2,29 +2,9 @@
 import $ from 'jquery';
 import {BASE_URL} from "../BaseUrl";
 
-export function registerForGame(gameChannel) {
-    return (dispatch) => {
-        gameChannel.push("games:register_for_game").receive("ok", payload => {
-            dispatch({
-                type: "fetch_game_data",
-                gameData: payload.gameData,
-                gameChannel: gameChannel
-            });
-        });
-
-        gameChannel.on("update_game", payload => {
-            dispatch({
-                type: "fetch_game_data",
-                gameData: payload.gameData,
-                gameChannel: gameChannel
-            });
-        });
-    }
-}
-
 export function joinGame(gameid, userid, history) {
     $.ajax({
-        url: "/api/games/" + gameid,
+        url: BASE_URL + "/api/games/" + gameid,
         type: "PATCH",
         contentType: "application/json",
         data: JSON.stringify({"player2": "api/users/" + userid}),
@@ -49,9 +29,8 @@ export function spectateGame(history, gameid) {
 
 export function markSquare(i, j, gameid) {
     let obj = {i: i, j: j, id: gameid};
-    console.log(obj);
     $.ajax({
-        url: "/game/markSquare",
+        url: BASE_URL +  "/game/markSquare",
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify(obj),
@@ -59,11 +38,10 @@ export function markSquare(i, j, gameid) {
 
         },
         error: function (error) {
-
+        
         }
     });
 }
-
 
 export const newGame = (gameName, userid) => (dispatch) => {
     $.ajax({
@@ -72,7 +50,6 @@ export const newGame = (gameName, userid) => (dispatch) => {
         contentType: "application/json",
         data: JSON.stringify({"gameName": gameName, "player1": "api/users/" + userid}),
         success: function (resp) {
-            console.log(resp);
             delete resp["_links"];
             dispatch({
                 type: "new_game_created",
@@ -88,7 +65,7 @@ export const newGame = (gameName, userid) => (dispatch) => {
 
 export function subscribeToGameChanges(lobbyClient, gameid) {
     return (dispatch) => {
-        lobbyClient.subscribe(BASE_URL + '/games/' + gameid, function (resp) {
+        lobbyClient.subscribe('/games/' + gameid, function (resp) {
             console.log("Game data updated: ", resp.body);
             dispatch({
                 type: "fetch_game_data",

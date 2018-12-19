@@ -5,7 +5,7 @@ import {BASE_URL} from "../BaseUrl";
 
 export function fetchGames(lobbyClient) {
     return (dispatch, getState) => {
-        lobbyClient.subscribe(BASE_URL + '/games/newGame', function (resp) {
+        lobbyClient.subscribe('/games/newGame', function (resp) {
             dispatch({
                 type: "current_games_set",
                 games: JSON.parse(resp.body),

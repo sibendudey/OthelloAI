@@ -31,6 +31,7 @@ export class ListGame extends React.Component {
     }
 
     handleClick()   {
+        
         this.state.inProgress ?
             spectateGame(this.props.history, this.state.id) :
             joinGame(this.state.id, this.props.userid, this.props.history);

@@ -11,11 +11,11 @@ class Game extends React.Component {
     super(props);
   }
   
-  componentWillMount() {
-    const {dispatch, profile} = this.props;
+  componentDidMount() {
+    const {profile, dispatchFetchGameData, dispatchSubscribeToGameChanges} = this.props;
     const {gameName} = this.props.match.params;
-    if (this.props.gameData == null) dispatch(fetchGameData(gameName));
-    dispatch(subscribeToGameChanges(profile.client, gameName));
+    if (this.props.gameData == null) dispatchFetchGameData(gameName);
+    dispatchSubscribeToGameChanges(profile, gameName);
   }
   
   render() {
@@ -88,7 +88,6 @@ class Game extends React.Component {
           achieves this, any white pieces between the two black are turned
           black so that the line becomes entirely black. Same applies if you
           play as white.
-        
         </p>
       </div>
     
@@ -405,8 +404,14 @@ function score_board(player1, player2, in_progress, isFinished) {
   return null;
 }
 
+
+const mapDispatchToProps = (dispatch) => ({
+  dispatchFetchGameData: (gameName) => dispatch(fetchGameData(gameName)),
+  dispatchSubscribeToGameChanges: (profile, gameId) => dispatch(subscribeToGameChanges((profile || {}). client, gameId)),
+});
+
 const mapStateToProps = (state, props) => {
   return Object.assign({}, state.game, props, state.lobby, {profile: state.profile});
 };
 
-export default withRouter(connect(mapStateToProps)(Game));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Game));

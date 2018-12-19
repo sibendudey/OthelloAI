@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.fasterxml.jackson.databind.util.JSONWrappedObject;
 import com.othelloai.game.Game;
 import com.othelloai.game.GameRepository;
+import com.othelloai.game.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class GameEventHandler {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private GameRepository gameRepository;
+    private GameService gameService;
 
     @Autowired
     public GameEventHandler(SimpMessagingTemplate websocket, EntityLinks entityLinks)   {
@@ -44,7 +45,7 @@ public class GameEventHandler {
     @HandleAfterCreate
     public void newGame(Game game) {
         this.websocket.convertAndSend(
-                MESSAGE_PREFIX + "/newGame", getGames());
+                MESSAGE_PREFIX + "/newGame", gameService.gamesForLobby());
     }
 
     @HandleAfterDelete
@@ -67,20 +68,5 @@ public class GameEventHandler {
     private String getPath(Game game) {
         return this.entityLinks.linkForSingleResource(game.getClass(),
                 game.getId()).toUri().getPath();
-    }
-
-    private JsonNode getGames()   {
-        ObjectMapper om = new ObjectMapper();
-        JsonNode gameLinks = om.createArrayNode();
-
-        for (Game g : gameRepository.findAll()) {
-            JsonNode gameLink = om.createObjectNode();
-            ((ObjectNode) gameLink).put("id", g.getId());
-            ((ObjectNode) gameLink).put("name", g.getGameName());
-            ((ObjectNode) gameLink).put("inProgress", g.inProgress());
-            ((ArrayNode) gameLinks).add(gameLink);
-        }
-
-        return gameLinks;
     }
 }
