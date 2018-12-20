@@ -66,7 +66,6 @@ export const newGame = (gameName, userid) => (dispatch) => {
 export function subscribeToGameChanges(lobbyClient, gameid) {
     return (dispatch) => {
         lobbyClient.subscribe('/games/' + gameid, function (resp) {
-            console.log("Game data updated: ", resp.body);
             dispatch({
                 type: "fetch_game_data",
                 gameData: JSON.parse(resp.body),

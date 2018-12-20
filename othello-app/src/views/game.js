@@ -18,8 +18,6 @@ class Game extends React.Component {
     dispatchSubscribeToGameChanges(profile, gameName);
   }
   
-  
-  
   render() {
     if (this.props.gameData == null) return null;
     
@@ -399,7 +397,7 @@ function score_board(player1, player2, in_progress, isFinished) {
 
 const mapDispatchToProps = (dispatch) => ({
   dispatchFetchGameData: (gameName) => dispatch(fetchGameData(gameName)),
-  dispatchSubscribeToGameChanges: (profile, gameId) => dispatch(subscribeToGameChanges((profile || {}). client, gameId)),
+  dispatchSubscribeToGameChanges: (profile, gameId) => dispatch(subscribeToGameChanges((profile || {}).client, gameId)),
 });
 
 const mapStateToProps = (state, props) => {
