@@ -13,7 +13,7 @@ public class ExposeIdRestConfiguration extends RepositoryRestConfigurerAdapter {
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         config.exposeIdsFor(User.class);
-        config.getCorsRegistry().addMapping("/**")
+        config.getCorsRegistry().addMapping("/**").allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "PATCH");
     }
 }
