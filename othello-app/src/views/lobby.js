@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {fetchGames, getStats} from "../actions/lobby";
-import {ListGame} from "../components/listgame";
+import ListGame from "../components/listgame";
 import {newGame} from "../actions/game";
 import $ from 'jquery';
 import Paper from "@material-ui/core/Paper";
@@ -57,14 +57,14 @@ class LobbyView extends React.Component {
     }
 
     renderCurrentGames() {
-        const {games} = this.props;
+        const {games, history} = this.props;
         if (games.length === 0) return "No Games Currently being played";
         const gamesList = games.map((game) => (<TableRow>
             <ListGame
-                history={this.props.history}
                 userid={this.props.profile.id}
                 key={game.name + game.inProgress}
-                game={game} />
+                game={game}
+                history={history}/>
           </TableRow>));
         return gamesList;
     }
