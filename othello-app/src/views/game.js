@@ -14,9 +14,11 @@ class Game extends React.Component {
   componentDidMount() {
     const {profile, dispatchFetchGameData, dispatchSubscribeToGameChanges} = this.props;
     const {gameName} = this.props.match.params;
-    if (this.props.gameData == null) dispatchFetchGameData(gameName);
+    dispatchFetchGameData(gameName);
     dispatchSubscribeToGameChanges(profile, gameName);
   }
+  
+  
   
   render() {
     if (this.props.gameData == null) return null;
