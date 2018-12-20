@@ -161,7 +161,7 @@ class Board extends React.Component {
   render() {
     return (
       <div style={{display: "flex", flexFlow: "column"}}>
-        <div className="card card-header visible" id="info_board">
+        <div className="visible" id="info_board">
           {this.get_info()}
         </div>
         <div style={{margin: "auto"}}>
