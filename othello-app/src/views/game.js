@@ -126,9 +126,9 @@ class Board extends React.Component {
       row.push(this.renderSquare(r, i));
     }
     return (
-      <div key={'row' + r}>
+      <Grid item xs={24} container direction='row' key={'row' + r}>
         {row}
-      </div>
+      </Grid>
     );
   }
   
@@ -138,9 +138,9 @@ class Board extends React.Component {
       rows.push(this.renderRow(i));
     }
     return (
-      <div style={{display: "flex", flexFlow: "column"}}>
+      <Grid container direction='column'>
         {rows}
-      </div>
+      </Grid>
     );
   }
   
@@ -205,9 +205,9 @@ class Square extends React.Component {
   render() {
     
     return (
-      <a className="square" style={this.setStyle()} onClick={this.Click.bind(this)}>
+      <Grid item xs className='square' style={this.setStyle()} onClick={this.Click.bind(this)}>
         {this.renderDisc()}
-      </a>
+      </Grid>
     );
   }
   
