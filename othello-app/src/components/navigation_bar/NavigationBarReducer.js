@@ -22,7 +22,11 @@ const INITIAL_STATE = {
     },
     {
       tabName: 'Play a game',
-      tabUrl: 'create_game',
+      tabUrl: '/create_game',
+    },
+    {
+      tabName: 'Logout',
+      tabUrl: '/logout'
     }
   ],
   

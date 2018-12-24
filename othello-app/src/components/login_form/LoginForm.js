@@ -1,19 +1,8 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
-import {
-  FormGroup,
-  Form,
-  Label,
-  Input,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText
-} from 'reactstrap';
-import {Link} from 'react-router-dom';
 import swal from 'sweetalert';
 
 import {connect} from "react-redux";
-import $ from 'jquery';
 import {TextField} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import './loginForm.scss';

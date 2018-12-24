@@ -7,3 +7,12 @@ export const profileSuccess = (response, socketClient) => (dispatch) => {
     profile: {emailId: response.email, userName: response.userName, id: response.id, client: socketClient},
   });
 };
+
+
+export const RESET_PROFILE = 'RESET_PROFILE';
+export const profileReset = () => (dispatch) => {
+  localStorage.removeItem("email");
+  dispatch({
+    type: RESET_PROFILE,
+  });
+}

@@ -7,6 +7,7 @@ import ProfilePage from "../profile_page/ProfilePage";
 import LobbyView from '../../views/lobby';
 import Game from '../../views/game';
 import CreateGame from "../create_game/CreateGame";
+import Logout from "../logout/Logout";
 
 const Routes = (props) => {
   const {profile} = props;
@@ -16,6 +17,7 @@ const Routes = (props) => {
     }
     <Route exact path='/login' component={LoginForm}/>
     <Route path='/register' component={RegisterForm}/>
+    <Route path='/logout' component={Logout} />
     {profile &&
     <React.Fragment>
       <Route path='/profile' component={ProfilePage}/>
