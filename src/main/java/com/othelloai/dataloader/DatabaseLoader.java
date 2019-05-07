@@ -9,7 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 // Uncomment the annotation if you want to load the DB in your env
-@Component
+//@Component
 public class DatabaseLoader implements CommandLineRunner {
 
 	private final GameRepository repository;

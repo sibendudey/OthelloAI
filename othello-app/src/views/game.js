@@ -164,7 +164,7 @@ class Board extends React.Component {
         <div className="visible" id="info_board">
           {this.get_info()}
         </div>
-        <div style={{margin: "auto"}}>
+        <div style={{margin: "0px auto 20px"}}>
           {this.renderRows()}
           {score_board(this.props.gameData.player1info,
             this.props.gameData.player2info,

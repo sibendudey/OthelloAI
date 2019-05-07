@@ -1,11 +1,10 @@
 package com.othelloai.user;
 
-import com.othelloai.game.Game;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<User, Long> {
-    User findOneByEmail(String email);
+    Optional<User> findOneByEmail(String email);
     User findOneById(Long id);
 }

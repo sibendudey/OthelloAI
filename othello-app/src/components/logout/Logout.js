@@ -11,4 +11,5 @@ export const Logout = (props) => {
 export const mapDispatchToProps = (dispatch) => ({
   dispatchProfileReset: () => dispatch(profileReset()),
 });
+
 export default connect(null, mapDispatchToProps)(Logout);

@@ -16,6 +16,7 @@
 package com.othelloai.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.othelloai.game.Game;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,5 +54,15 @@ public class User {
 	public User(String userName, String email) {
 		this.userName = userName;
 		this.email = email;
+	}
+
+	@JsonProperty("winPercentage")
+	public double getWinPercentage()	{
+		double totalGames = games1.size() + games2.size();
+
+		if (totalGames == 0.0)
+			return 0;
+
+		return winningGames.size() / totalGames;
 	}
 }

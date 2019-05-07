@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 package com.othelloai;
-
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
 public class HomeController {
 	@RequestMapping(value = {"/", "/lobby", "/games/{gameName}", "/register"})
 	public String index() {

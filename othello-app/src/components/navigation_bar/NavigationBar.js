@@ -10,17 +10,18 @@ export const NavigationBar = (props) => {
   const {history, location, profile} = props;
   const tabs = profile ? props.navBar.loggedInTabs : props.navBar.loggedOffTabs;
   return (
-    <div><AppBar position='relative'>
-      <Toolbar>
-        <Tabs value={(tabs.find(tab => tab.tabUrl === location.pathname) || {}).tabName} onChange={(event, value) => {
-          history.push(tabs.find(tab => tab.tabName === value).tabUrl);
-        }}>
-          {
-            tabs.map((tab) => (<Tab value={tab.tabName} label={tab.tabName}/>))
-          }
-        </Tabs>
-      </Toolbar>
-    </AppBar>
+    <div>
+      <AppBar position='relative'>
+        <Toolbar>
+          <Tabs value={(tabs.find(tab => tab.tabUrl === location.pathname) || {}).tabName} onChange={(event, value) => {
+            history.push(tabs.find(tab => tab.tabName === value).tabUrl);
+          }}>
+            {
+              tabs.map((tab) => (<Tab value={tab.tabName} label={tab.tabName}/>))
+            }
+          </Tabs>
+        </Toolbar>
+      </AppBar>
     </div>);
 };
 
