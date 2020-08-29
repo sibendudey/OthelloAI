@@ -1,7 +1,5 @@
-
-
-const HOST_ADDRESS = 'localhost';
-const PORT = '8080';
+const HOST_ADDRESS = '35.153.31.251';
+const PORT = '8092';
 const HTTP_PROTOCOL = 'http://';
 export const BASE_URL = HTTP_PROTOCOL + HOST_ADDRESS + ':' + PORT;
 
