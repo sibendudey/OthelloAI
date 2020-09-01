@@ -1,4 +1,4 @@
-const HOST_ADDRESS = '34.201.10.173';
+const HOST_ADDRESS = '3.236.155.83';
 const PORT = '8443';
 const HTTP_PROTOCOL = 'http://';
 const HTTPS_PROTOCOL = 'https://';
