@@ -1,5 +1,4 @@
 import React from 'react';
-import Sweetalert from 'sweetalert';
 import $ from 'jquery';
 import {BASE_URL} from "../BaseUrl";
 

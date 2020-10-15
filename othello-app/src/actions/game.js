@@ -9,12 +9,7 @@ export function joinGame(gameid, userid, history) {
         contentType: "application/json",
         data: JSON.stringify({"player2": "api/users/" + userid}),
         success: function (resp) {
-            console.log(resp);
             delete resp["_links"];
-            // store.dispatch({
-            //     type: "new_game_created",
-            //     gameData: resp,
-            // });
             history.push("/games/" + gameid);
         },
         error: function (error) {
@@ -43,19 +38,18 @@ export function markSquare(i, j, gameid) {
     });
 }
 
-export const newGame = (gameName, userid) => (dispatch) => {
+export const newGame = (gameName, userid, gameType = gameTypes.OneVsOne) => (dispatch) => {
     $.ajax({
         url: "/api/games/",
         type: "POST",
         contentType: "application/json",
-        data: JSON.stringify({"gameName": gameName, "player1": "api/users/" + userid}),
+        data: JSON.stringify({"gameName": gameName, "userId": userid}),
         success: function (resp) {
             delete resp["_links"];
             dispatch({
                 type: "new_game_created",
                 gameData: resp,
             });
-            // dispatch(push("/games/" + resp.id));
         },
         error: function (error) {
             console.log(error);
@@ -90,4 +84,10 @@ export function fetchGameData(gameid) {
             }
         });
     }
+}
+
+const gameTypes = {
+    OneVsOne: "OneVsOne",
+    OneVsAI: "OneVsAI",
+    AIVsAI: "AIVsAI"
 }

@@ -1,12 +1,14 @@
 package com.othelloai.user;
 
 import com.othelloai.game.Game;
+import com.othelloai.game.GameRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -14,26 +16,22 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    GameRepository gameRepository;
+
     public List<UserService.GameStatsData> userStats(long userId) {
-        User user = userRepository.findOneById(userId);
-        final List<GameStatsData> gameStatsDataList = new ArrayList<>();
-        user.getGames1()
-                .stream()
-                .filter(g -> g.finished())
-                .forEach((g) -> gameStatsDataList.add(GameStatsDataFactory.createGameStatsData(g)));
 
-        user.getGames2()
+        return gameRepository.findAllByPlayer1OrPlayer2(userId, userId)
                 .stream()
-                .forEach(g -> gameStatsDataList.add(GameStatsDataFactory.createGameStatsData(g)));
-
-        return gameStatsDataList;
+                .map(GameStatsDataFactory::createGameStatsData)
+                .collect(Collectors.toList());
     }
 
     private static class GameStatsDataFactory {
         public static GameStatsData createGameStatsData(Game g) {
-            return new GameStatsData(g.getWinner().getUserName(),
-                    g.getWinner().equals(g.getPlayer1()) ? g.getPlayer2().getUserName() : g.getPlayer1().getUserName(),
-                    g.getWinner().getId());
+            return new GameStatsData(g.getWinner().user().getUserName(),
+                    g.getWinner().equals(g.getPlayer1()) ? g.getPlayer2().user().getUserName() : g.getPlayer1().user().getUserName(),
+                    g.getWinner().user().getId());
         }
     }
 

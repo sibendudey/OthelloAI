@@ -1,5 +1,4 @@
 export function setSession(history, userName)    {
-
     return (dispatch) => {
         dispatch({
             type: "set_session",

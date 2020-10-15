@@ -3,7 +3,7 @@ import CircularProgressBar from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import './profilePage.scss';
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/es/Paper/Paper";
+import Paper from "@material-ui/core/Paper";
 import {connect} from "react-redux";
 
 export const ProfilePage = (props) => {
@@ -33,3 +33,4 @@ export const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps)(ProfilePage);
+

@@ -7,10 +7,6 @@ import Grid from "@material-ui/core/Grid";
 
 class Game extends React.Component {
   
-  constructor(props) {
-    super(props);
-  }
-  
   componentDidMount() {
     const {profile, dispatchFetchGameData, dispatchSubscribeToGameChanges} = this.props;
     const {gameName} = this.props.match.params;
@@ -38,16 +34,6 @@ class Game extends React.Component {
           </Grid>
         </Grid>
       </div>
-      //     {/*<div className="chat">*/}
-      //     {/*<div className="chat_heading">*/}
-      //     {/*<h4>*/}
-      //     {/*CHAT*/}
-      //     {/*</h4>*/}
-      //     {/*</div>*/}
-      //     {/*<ChatView dispatch={this.props.dispatch} gameChannel={this.props.gameChannel}*/}
-      //     {/*messages={this.props.messages}/>*/}
-      //     {/*</div>*/}
-      // </div>
     );
   }
   
@@ -239,7 +225,7 @@ class OppositeTurnBoard extends Board {
       + "'s" + " turn";
   }
   
-  declare_winner() {
+  static declare_winner() {
     return <h3>
       Sorry. You Lost the game :(
     </h3>;

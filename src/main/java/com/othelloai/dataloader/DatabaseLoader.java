@@ -1,12 +1,12 @@
 package com.othelloai.dataloader;
 
+import com.othelloai.players.HumanPlayerImpl;
 import com.othelloai.game.Game;
 import com.othelloai.game.GameRepository;
 import com.othelloai.user.User;
 import com.othelloai.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
 // Uncomment the annotation if you want to load the DB in your env
 //@Component
@@ -28,8 +28,8 @@ public class DatabaseLoader implements CommandLineRunner {
 
         Game game  = new Game("game1");
 
-        game.setPlayer1(player1);
-        game.setPlayer2(player2);
+        game.setPlayer1(new HumanPlayerImpl(player1));
+        game.setPlayer2(new HumanPlayerImpl(player2));
         game.setBoard("OOOOOOOXOOOOOOXXOXOXOXOXOOOOOOXXOOOOOOXXOOXOOOXXOOOOOOXXOOOXOO|X");
         game.dummyMove();
 		repository.save(game);

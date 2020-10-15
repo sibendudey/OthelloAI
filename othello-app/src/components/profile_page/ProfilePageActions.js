@@ -15,4 +15,4 @@ export const profileReset = () => (dispatch) => {
   dispatch({
     type: RESET_PROFILE,
   });
-}
+};

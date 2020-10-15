@@ -7,7 +7,7 @@ module.exports = {
         filename: './target/classes/resources/static/built/bundle.js'
     },
     resolve: {
-      extensions: ['.js', '.jsx']
+      extensions: ['.js', '.jsx', '.ts']
     },
     module: {
         rules:[
@@ -22,6 +22,11 @@ module.exports = {
             },
             {
                 test: /\.js$/,
+                exclude: /node_modules/,
+                use: "babel-loader",
+            },
+            {
+                test: /\.ts$/,
                 exclude: /node_modules/,
                 use: "babel-loader",
             }

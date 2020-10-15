@@ -35,7 +35,7 @@ class LobbyView extends React.Component {
     }
 
     render() {
-        const {lobby, dispatch, history} = this.props;
+        const {history} = this.props;
         return (<div className={"view-all-games-container"}>
             <Paper>
                 <Table>

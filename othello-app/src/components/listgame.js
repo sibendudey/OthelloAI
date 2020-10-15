@@ -24,7 +24,6 @@ export class ListGame extends React.Component {
     ];
     
     render() {
-        
         const status = this.getStatus();
         const { game } = this.props;
         return (

@@ -5,13 +5,12 @@ const initialState = {
 };
 
 export default function reducer(state = initialState, action = {}) {
-    switch (action.type) {
-        case "current_games_set":
-            return Object.assign({}, state, {
-                games: action.games,
-                lobbyClient: action.lobbyClient
-            });
-        default:
-            return state;
+    if (action.type === "current_games_set") {
+        return Object.assign({}, state, {
+            games: action.games,
+            lobbyClient: action.lobbyClient
+        });
+    } else {
+        return state;
     }
 }

@@ -12,12 +12,12 @@ export const updateCreateGameForm = (obj) => (dispatch) => {
 export const createGame = (history) => (dispatch, getState) => {
   const state = getState();
   const userid = state.profile.id;
-  const gameName = state.createGame.gamename;
+  const { gamename, gameType }  = state.createGame;
   $.ajax({
-    url: BASE_URL + "/api/games/",
+    url: BASE_URL + "/game/createGame/",
     type: "POST",
     contentType: "application/json",
-    data: JSON.stringify({"gameName": gameName, "player1": "api/users/" + userid}),
+    data: JSON.stringify({"gameName": gamename, "userId": userid, "gameType": gameType}),
     success: function (resp) {
       history.push("/games/" + resp.id);
     },

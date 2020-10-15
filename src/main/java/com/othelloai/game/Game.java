@@ -6,13 +6,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.othelloai.user.User;
+import com.othelloai.players.AbstractPlayer;
+import com.othelloai.players.Player;
+import com.othelloai.game.gamerules.GameRule;
 import lombok.Data;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.stream.Stream;
 
@@ -21,7 +24,6 @@ import java.util.stream.Stream;
 @ToString(exclude = {"player1", "player2"})
 public class Game {
 
-
     private static final Logger logger = LoggerFactory.getLogger(Game.class.getName());
     private static final int BOARD_SIZE = 8;
     private static final int PLAYER_1_TURN = 0;
@@ -29,28 +31,39 @@ public class Game {
     private static final String INITIAL_BOARD =
             String.join("", Collections.nCopies(64, String.valueOf(SQUARE.BLANK.getValue())));
 
+    public enum GameType    {
+        OneVsOne, OneVsAI, AIvsAI;
+    }
+
+    private GameType gameType;
+
     private @Id
     @GeneratedValue
     Long Id;
+
+    @NotNull
     private String gameName;
 
     // 0 means 1st player turn and 1 means 2nd player turn
     @JsonIgnore
     private int turn;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = AbstractPlayer.class)
     @JoinColumn(name = "player1_fk")
-    private User player1;
+    private Player player1;
 
-    @ManyToOne
-    @JsonIgnore
+    @ManyToOne(targetEntity = AbstractPlayer.class)
     @JoinColumn(name = "player2_fk")
-    private User player2;
+    private Player player2;
 
-    @OneToOne
-    private User winner;
+    @OneToOne(targetEntity = com.othelloai.players.AbstractPlayer.class)
+    private Player winner;
     // Represent the board as a string.
     private String board = getInitialBoard();
+
+    @Transient
+    @JsonIgnore
+    private GameRule winnerRule = GameRule.oneOnOneGameRule();
 
     public Game() {
     }
@@ -60,28 +73,27 @@ public class Game {
     }
 
     @JsonIgnore
-    public User getWinner() {
+    public Player getWinner() {
         return winner;
     }
 
-
     @JsonIgnore
-    public User getPlayer1() {
+    public Player getPlayer1() {
         return player1;
     }
 
     @JsonProperty("player1")
-    public void setPlayer1(User user) {
-        this.player1 = user;
+    public void setPlayer1(Player player) {
+        this.player1 = player;
     }
 
     @JsonIgnore
-    public User getPlayer2() {
+    public Player getPlayer2() {
         return player2;
     }
 
     @JsonProperty("player2")
-    public void setPlayer2(User user) {
+    public void setPlayer2(Player user) {
         this.player2 = user;
     }
 
@@ -98,8 +110,8 @@ public class Game {
         if (winner != null) {
             ObjectMapper om = new ObjectMapper();
             JsonNode jsonNode = om.createObjectNode();
-            ((ObjectNode) jsonNode).put("id", winner.getId());
-            ((ObjectNode)jsonNode).put("userName", winner.getUserName());
+            ((ObjectNode) jsonNode).put("id", winner.user().getId());
+            ((ObjectNode)jsonNode).put("userName", winner.user().getUserName());
             return jsonNode;
         }
 
@@ -129,14 +141,15 @@ public class Game {
 
     @JsonGetter("player1info")
     public PlayerInfo getPlayerInfo1() {
-        return new PlayerInfo(player1.getId(), player1.getUserName(), turn == 0, getScore1());
+        return new PlayerInfo(player1.user().getId(), player1.user().getUserName(), turn == 0, getScore1());
     }
 
     @JsonGetter("player2info")
     public PlayerInfo getPlayerInfo2() {
         if (player2 == null) return null;
-        return new PlayerInfo(player2.getId(), player2.getUserName(), turn == 1, getScore2());
+        return new PlayerInfo(player2.user().getId(), player2.user().getUserName(), turn == 1, getScore2());
     }
+
 
     private String getInitialBoard() {
         StringBuilder board = new StringBuilder(INITIAL_BOARD);
@@ -155,13 +168,13 @@ public class Game {
         int pos = row * BOARD_SIZE + col;
         switch (turn) {
             case PLAYER_1_TURN: {
-                char boardChar[] = board.toCharArray();
+                char[] boardChar = board.toCharArray();
                 boardChar[pos] = SQUARE.BLACK.getValue();
                 this.board = new String(boardChar);
                 break;
             }
             case PLAYER_2_TURN: {
-                char boardChar[] = board.toCharArray();
+                char[] boardChar = board.toCharArray();
                 boardChar[pos] = SQUARE.WHITE.getValue();
                 this.board = new String(boardChar);
             }
@@ -185,6 +198,7 @@ public class Game {
         });
 
         convertAllPlayableToBlank();
+
         // Check for available moves
         // For every vacant box, for the next turn, see if it is a valid move,
         // if found any coordinates, return , or else try for same player
@@ -198,7 +212,7 @@ public class Game {
         }
 
         // Declares a winner if none of them is able to make a move
-        if (this.board.chars().noneMatch(c -> c == SQUARE.PLAYABLE.getValue())) {
+        if (winnerRule.gameRule(this)) {
             declareWinner();
         }
 
@@ -210,7 +224,7 @@ public class Game {
                 return SQUARE.BLANK.getValue();
             else
                 return (char)c;
-        }).collect(() -> new StringBuilder(), (sb, c) -> sb.append(c), (sb1, sb2) -> sb1.append(sb2)).toString();
+        }).collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
     }
 
     private void declareWinner() {
@@ -227,18 +241,17 @@ public class Game {
     }
 
     private void calculateAvailableMove() {
-        char squares[] = board.toCharArray();
+        char[] squares = board.toCharArray();
 
         for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
-            if (squares[i] == SQUARE.BLANK.getValue() && nextAvailableSquare(squares, i))
+            if (squares[i] == SQUARE.BLANK.getValue() && nextAvailableSquare(i))
                 squares[i] = SQUARE.PLAYABLE.getValue();
         }
 
         this.board = new String(squares);
-
     }
 
-    private boolean nextAvailableSquare(char[] squares, int i) {
+    private boolean nextAvailableSquare(int i) {
         int row = i / BOARD_SIZE;
         int col = i % BOARD_SIZE;
 
@@ -264,27 +277,20 @@ public class Game {
 
             int pos = row * BOARD_SIZE + col;
 
-            switch(turn)    {
-                case PLAYER_1_TURN: {
-                    if (squares[pos] == SQUARE.BLACK.getValue())    {
-                        this.board = new String(squares);
-                        return;
-                    }
-
-                    logger.debug("Setting row: {}, col: {} to black", row, col);
-                    squares[row * BOARD_SIZE + col] = SQUARE.BLACK.getValue();
-                    break;
+            if (turn == PLAYER_1_TURN) {
+                if (squares[pos] == SQUARE.BLACK.getValue()) {
+                    this.board = new String(squares);
+                    return;
                 }
-                case PLAYER_2_TURN: {
-                    if (squares[pos] == SQUARE.WHITE.getValue())    {
-                        this.board = new String(squares);
-                        return;
-                    }
-
-
-                    logger.debug("Setting row: {}, col: {} to white", row, col);
-                    squares[row * BOARD_SIZE + col] = SQUARE.WHITE.getValue();
+                logger.debug("Setting row: {}, col: {} to black", row, col);
+                squares[row * BOARD_SIZE + col] = SQUARE.BLACK.getValue();
+            } else if (turn == PLAYER_2_TURN) {
+                if (squares[pos] == SQUARE.WHITE.getValue()) {
+                    this.board = new String(squares);
+                    return;
                 }
+                logger.debug("Setting row: {}, col: {} to white", row, col);
+                squares[row * BOARD_SIZE + col] = SQUARE.WHITE.getValue();
             }
 
             row = row + i;
@@ -297,9 +303,6 @@ public class Game {
 
         logger.debug("is Possible direction, row: {}, col: {}, i: {}, j: {}", row, col, i, j);
 
-//        i = i == 0 ? i : i > 0 ? i + 1 : i - 1;
-//        j = j == 0 ? j : j > 0 ? j + 1 : j - 1;
-
         row = row + i;
         col = col + j;
 
@@ -308,19 +311,12 @@ public class Game {
             if (board.charAt(row * BOARD_SIZE + col ) == SQUARE.BLANK.getValue())
                 return false;
 
-            switch (turn) {
-                case PLAYER_1_TURN: {
-                    if (board.charAt(row * BOARD_SIZE + col) == SQUARE.BLACK.getValue())
-                        return true;
-                    break;
-                }
-
-                case PLAYER_2_TURN: {
-                    if (board.charAt(row * BOARD_SIZE + col) == SQUARE.WHITE.getValue())
-                        return true;
-
-                    break;
-                }
+            if (turn == PLAYER_1_TURN) {
+                if (board.charAt(row * BOARD_SIZE + col) == SQUARE.BLACK.getValue())
+                    return true;
+            } else if (turn == PLAYER_2_TURN) {
+                if (board.charAt(row * BOARD_SIZE + col) == SQUARE.WHITE.getValue())
+                    return true;
             }
 
             row = row + i;
@@ -334,33 +330,30 @@ public class Game {
     private boolean adjacentOppColor(int row, int col) {
 
         logger.debug("adjacentOppColor, row: {}, col: {}", row, col);
-        switch (turn) {
-            case PLAYER_1_TURN: {
-                return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE &&
-                        board.charAt(row * BOARD_SIZE + col) == SQUARE.WHITE.getValue();
-            }
-            case PLAYER_2_TURN: {
-                return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE &&
-                        board.charAt(row * BOARD_SIZE + col) == SQUARE.BLACK.getValue();
-            }
+
+        if (turn == PLAYER_1_TURN) {
+            return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE &&
+                    board.charAt(row * BOARD_SIZE + col) == SQUARE.WHITE.getValue();
+        } else if (turn == PLAYER_2_TURN) {
+            return row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE &&
+                    board.charAt(row * BOARD_SIZE + col) == SQUARE.BLACK.getValue();
         }
 
         return false;
     }
 
-    private enum SQUARE {
+    public enum SQUARE {
 
         WHITE('O'), BLACK('X'), BLANK('|'), PLAYABLE('?');
-        private char square;
+        private char aSquare;
 
         SQUARE(char s) {
-            this.square = s;
+            this.aSquare = s;
         }
 
         public char getValue() {
-            return square;
+            return aSquare;
         }
-
     }
 
     private class PlayerInfo {
@@ -386,7 +379,7 @@ public class Game {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Game && this.Id == ((Game) obj).Id;
+        return obj instanceof Game && this.Id.equals(((Game) obj).Id);
     }
 
     @Override
