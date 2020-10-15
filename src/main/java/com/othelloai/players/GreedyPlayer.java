@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import java.awt.*;
 import java.util.ArrayList;
 
+
+// Citation: https://github.com/arminkz/Reversi/blob/master/src/player/GreedyPlayer.java
 @Entity
 public class GreedyPlayer extends AbstractPlayer {
 
